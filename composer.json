@@ -1,0 +1,38 @@
+{
+  "name": "grgk/seo-analyzer",
+  "description": "Seo Analyzer",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=7.0",
+    "ext-dom": "*",
+    "ext-libxml": "*",
+    "guzzlehttp/guzzle": "^6.3",
+    "symfony/cache": "^4.2",
+    "symfony/translation": "^4.2",
+    "symfony/yaml": "^4.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7"
+  },
+  "autoload": {
+    "psr-4": {
+      "SeoAnalyzer\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "authors": [
+    {
+      "name": "grgk",
+      "email": "gfx@karpiak.pl"
+    }
+  ],
+  "scripts": {
+    "test": "phpunit",
+    "coverage": "phpunit --coverage-html ./coverage"
+  }
+}

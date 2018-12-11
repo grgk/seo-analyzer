@@ -1,0 +1,63 @@
+yes: tak
+no: nie
+Does the site use an encrypted connection?: Czy witryna używa szyfrowanego połączenia?
+You should use encrypted connection, as this could have strong impact on SEO: Powinienieś używać szyfrowanego połączenia ponieważ to może mieć duży wpływ na SEO
+Does the site use proper robots.txt file?: Czy witryna używa prawidłowego pliku "robots.txt"?
+Robots.txt file blocks some parts of your site from indexing by search engines. Blocking content can have a big negative impact on SEO: Plik "robots.txt" blokuje część witryny przed indeksowaniem przez wyszukiwarki. To może mieć poważny negatywny wpływ na SEO
+Does the site use a site map file "sitemap.xml"?: Czy witryna wykorzystuje plik mapy stron "sitemap.xml"?
+You should consider adding a sitemap.xml file, as this could help with indexing: Powinieneś rozważyć dodanie pliku sitemap.xml, ponieważ to może pomóc w indeksowaniu witryny
+Time used to load the page [sec.]: Czas ładowania strony [sek.]
+The site takes very long to load. You should definitely consider rebuilding the page and/or change the hosting provider: Twoja witryna ładuje się bardzo długo. Powinieneś koniecznie rozważyć jej przebudowę oraz/lub zmianę hostingu
+You should optimise your site for faster loading, as this could have strong impact on SEO: Powinieneś zoptymalizować swoją witrynę, aby ładowała się szybciej. To ma duży wpływ na SEO
+The site loads very fast: Witryna ładuje się bardzo szybko
+The size of the page: Rozmiar witryny
+The site is very big. You should consider rebuilding the page to optimise it's size: Strona jest bardzo duża. Powinienieś rozważyć jej przebudowę w celu zmniejszenia jej rozmiaru
+You should consider some optimisation of the page to decrease it's size: Powinieneś rozważyć opatymalizację strony celem zmnieszenia jej rozmiaru
+The size of your page is ok: Rozmiar strony jest w porządku
+The size of the page URL: Długość adresu witryny
+The site URL is very long. You should consider using some shorter URL: Adres witryny jest vardzo długi. Powinieneś rozważyć zmianę na krótszy
+You should consider using some shorter URL: Rozważ skrócenie adresu
+The size of URL is ok: Długość adresu witryny jest w porządku
+The ratio of page content to page code [%]: Stosunek ilości treści do kodu strony [%]
+Content to code ratio is too low. Consider adding more text to your page or remove some unnecessary html code: Stosunek zawartości do ilości kodu jest zbyt mały. Powinieneś zwiększyć ilośc tekstu na stronie oraz/lub zredukować niepotrzebny kod html
+Consider adding more text to your page or remove unnecessary html code. Good content have crucial impact on SEO: Powinieneś spróbować zwiększyć ilośc tekstu na stronie oraz/lub zredukować niepotrzebny kod html
+Page has good content to code ratio: Strona ma dobry stosunek ilosci treści do kodu
+Keyword density in page content: Gęstość słów kluczowych na stronie
+There are some overused keywords on site. You should consider limiting the use of overused phrases: Na stronie występują nadużywane słowa kluczowe. Powinienieś rozważyć ograniczenie ich występowania
+The keywords density on the site looks good: Gęstość słów kluczowych na stronie wygląda dobrze
+Keyword density: Gęstość słów kluczowych
+Alternate texts for images: Alternatywne opisy obrazów
+There is nothing to do here as there is no images on the site.: Strona nie zawiera żadnych obrazów, więc żadna akcja nie jest wymagana
+There is a lot of images without alternate texts on your site. Every image should be described with alt attribute: Na stronie znajduję sie wiele obrazów bez alternatywnych opisów. Każdy obraz powinien zawierać alternatywny opis.
+You should optimise your site adding missing alt descriptions to images, as this could have strong impact on SEO: Powienieneś zoptymalizować stronę dodając alternatywne opisy do obrazów. To ma duży wpływ na SEO
+Good! All images on site have alternate descriptions: Świetnie! Wszystkie obrazy mają swoje alternatywne opisy
+Keyword density in page headers: Gęstość słów kluczowych w nagłówkach
+There are some overused keywords in headers. You should consider limiting the use of those phrases: Pewne słowa kluczowe sa nadużywane. Powinieneś ograniczyć użycie tych słów
+The keywords density in headers looks good: Gęstość słów kluczowych w nagłówkach wygląda dobrze
+Html headers metric: Nagłówki HTML
+Looks the site has no headers at all. You should rebuild your page structure as html headers have strong impact on SEO: Wygląda na to, że strona nie zawiera wcale nagłówków. Powinieneś ją przebudować, ponieważ struktura i zawartość nagłówków HTML ma duży wpływ na SEO
+There is no H1 header on the site. You should rebuild your page to use main headers as this has strong impact on SEO: Na stronie brakuje nagłówka H1. Powinieneś go dodać, ponieważ struktura i zawartość nagłówków HTML ma duży wpływ na SEO
+There are multiple H1 headers on the site. You should use only one main header on the site: Na stronie znajduje się kilka nagłówków H1. Powinieneś użyć tylko jednego.
+The H1 header is too long. You should consider changing it to something shorter including your main keyword: Zawartość nagłówka H1 jest zbyt długa. Pownienies ją skrócić w taki sposób, aby zawierała główne słowo kluczowe
+There are no H2 headers on the site. You should consider rebuild your page to use proper headers structure: Na stronie brakuje nagłówków H2. Powinieneś rozważyć przebudowę, ponieważ struktura i zawartość nagłówków HTML ma duży wpływ na SEO
+There are a lot of H2 headers on the site. You should limit number of H2 headers: Na stronie znajduje się bardzo dużo nagłówków H2. Powinieneś ograniczyć ich liczbę
+There are no H3 header on the site. Using proper headers structure can improve the SEO: Na stronie brakuje nagłówków H3. Uzycie prawidłowej struktury i zawartości nagłówków HTML ma duży wpływ na SEO
+The headers structure on the site looks very good: Struktura nagłówków wygląda bardzo dobrze
+Good! The key phrase is present in most popular keywords on the site: Świetnie! Główne słowo kluczowe zawarte jest w najpopularniejszych frazach występujących na stronie
+You should consider adding your keyword to the site content: Powienieś rozważyć dodanie słowa kluczowego do treści strony
+Does the headers contain a key phrase?: Czy nagłówki zawierają słowo kluczowe?
+The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO: Nagłówek H1 nie zawiera słowa kluczowego. Jego dodanie może znacząco poprawić SEO
+Good! The site headers contain the keyword phrase: Świetnie! Nagłówki zawierają słowo kluczowe
+The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO: Nagłówki H2 nie zawierają słowa kluczowego. Jego dodanie może znacząco poprawić SEO
+Does the page contain a key phrase?: Czy strona zawiera słowo kluczowe?
+Does it contain a key phrase?: Czy słowo kluczowe zostało użyte?
+Can not find the keyword phrase. Adding it could improve SEO: Nie znaleziono słowa kluczowego. Dodanie go może poprawić SEO
+Good! Found the keyword phrase: Świetnie! Znaleziono słowo kluczowe
+Html meta tags information: Informacja zawarta w meta tagach
+The page title length should be between 10 and 60 characters. Title should also include your main keyword: Tytuł strony powinnien być dłuzszy niż 10 i krótszy niż 60 znaków. Pownienien też zawierać słowo kluczowe
+Missing page meta description tag. We strongly recommend to add it. It should be between 30 and 120 characters and should include your main keyword: Brak meta tagu "description". Zalecamy dodanie tego tagu. Powinien być dłuższy niż 30 i krótszy niż 120 znaków. Powinien też zawierać słowo kluczowe
+The page meta description length should be between 30 and 120 characters. Description should also include your main keyword: Treść meta tagu "description" powinna być dłuższa niż 30 i krótsza niż 120 znaków. Powinna też zawierać słowo kluczowe
+The site meta tags look good: Meta tagi witryny wyglądają dobrze
+The key phrase is overused on the site. Try to reduce its occurrence: Fraza kluczowa jest nadużywana. Spróbuj ograniczyć jej występowanie na stronie
+Does the main URL redirects to other?: Czy URL przekierowuje na inny adres?
+You should avoid redirects, as this could have impact on SEO: Powinienieś unikać przekierowań, bo to może negatywnie wpłynąć na SEO
