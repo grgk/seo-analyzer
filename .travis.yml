@@ -14,4 +14,5 @@ addons:
     organization: "grgk-github"
 
 script:
+  - vendor/bin/phpunit --coverage-clover build/logs/phpunit/clover.xml --log-junit build/logs/phpunit/junit.xml --coverage-xml build/logs/phpunit/coverage/xml --coverage-html build/logs/phpunit/coverage/html
   - sonar-scanner
