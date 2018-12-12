@@ -4,7 +4,7 @@
   "type": "library",
   "license": "MIT",
   "require": {
-    "php": ">=7.0",
+    "php": ">=7.1",
     "ext-dom": "*",
     "ext-libxml": "*",
     "guzzlehttp/guzzle": "^6.3",

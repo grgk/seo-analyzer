@@ -3,7 +3,7 @@
 Basic PHP library to check several SEO metrics of a website.
 
 ## Requirements
-* PHP 7.0 (or higher)
+* PHP 7.1 (or higher)
 
 ## Installation
 
