@@ -285,10 +285,10 @@ class Page
     public function setFactor(string $name, $value)
     {
         $dots = explode(".", $name);
-        if(count($dots) > 1) {
+        if (count($dots) > 1) {
             $last = &$this->factors[ $dots[0] ];
-            foreach($dots as $k => $dot) {
-                if($k == 0) continue;
+            foreach ($dots as $k => $dot) {
+                if ($k == 0) continue;
                 $last = &$last[$dot];
             }
             $last = $value;
