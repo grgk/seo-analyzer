@@ -288,7 +288,9 @@ class Page
         if (count($dots) > 1) {
             $last = &$this->factors[ $dots[0] ];
             foreach ($dots as $k => $dot) {
-                if ($k == 0) continue;
+                if ($k == 0) {
+                    continue;
+                }
                 $last = &$last[$dot];
             }
             $last = $value;
