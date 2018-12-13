@@ -10,16 +10,16 @@ class CacheTest extends TestCase
     {
         $cache = new Cache();
         $cache->adapter->delete('testCacheKey');
-        $value = $cache->remember('testCacheKey', function() {
+        $value = $cache->remember('testCacheKey', function () {
             return 'initialValue';
         });
         $this->assertEquals('initialValue', $value);
-        $valueCached = $cache->remember('testCacheKey', function() {
+        $valueCached = $cache->remember('testCacheKey', function () {
             return 'newValue';
         });
         $this->assertEquals('initialValue', $valueCached);
         $cache->adapter->delete('testCacheKey');
-        $valueRefreshed = $cache->remember('testCacheKey', function() {
+        $valueRefreshed = $cache->remember('testCacheKey', function () {
             return 'newValueOneMoreTime';
         });
         $this->assertEquals('newValueOneMoreTime', $valueRefreshed);
@@ -28,11 +28,11 @@ class CacheTest extends TestCase
     public function testRememberPassOninvalidKey()
     {
         $cache = new Cache();
-        $value = $cache->remember('@', function() {
+        $value = $cache->remember('@', function () {
             return 'someTestValue';
         });
         $this->assertEquals('someTestValue', $value);
-        $value = $cache->remember('@', function() {
+        $value = $cache->remember('@', function () {
             return 'someNewTestValue';
         });
         $this->assertEquals('someNewTestValue', $value);

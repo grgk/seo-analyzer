@@ -28,7 +28,6 @@ class KeywordHeadersMetric extends AbstractMetric
             if ($anyH2HeaderIncludeKeyword) {
                 return 'Good! The site headers contain the keyword phrase';
             }
-
         }
         $this->impact = 3;
         return 'The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO';
