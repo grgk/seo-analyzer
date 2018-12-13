@@ -118,12 +118,32 @@ class MetricsTest extends TestCase
 
             [
                 'page.size',
+                4795,
+                [
+                    'class' => '\SeoAnalyzer\Metric\Page\SizeMetric',
+                    'value' => 4795,
+                    'impact' => 0,
+                    'analysis' => 'The size of your page is ok'
+                ]
+            ],
+            [
+                'page.size',
                 0,
                 [
                     'class' => '\SeoAnalyzer\Metric\Page\SizeMetric',
                     'value' => 0,
-                    'impact' => 0,
-                    'analysis' => 'The size of your page is ok'
+                    'impact' => 10,
+                    'analysis' => 'Looks that your site content is empty'
+                ]
+            ],
+            [
+                'page.size',
+                false,
+                [
+                    'class' => '\SeoAnalyzer\Metric\Page\SizeMetric',
+                    'value' => false,
+                    'impact' => 10,
+                    'analysis' => 'Can not read your page content'
                 ]
             ],
             [

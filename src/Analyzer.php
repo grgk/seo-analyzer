@@ -101,14 +101,15 @@ class Analyzer
         if (!empty($this->metrics)) {
             foreach ($this->metrics as $metric) {
                 if ($metric) {
-                    $analysisResult = $metric->analyze();
-                    $results[$metric->name] = [
-                        'analysis' => $translator->trans($analysisResult),
-                        'name' => $metric->name,
-                        'description' => $translator->trans($metric->description),
-                        'value' => $metric->value,
-                        'negative_impact' => $metric->impact,
-                    ];
+                    if ($analysisResult = $metric->analyze()) {
+                        $results[$metric->name] = [
+                            'analysis' => $translator->trans($analysisResult),
+                            'name' => $metric->name,
+                            'description' => $translator->trans($metric->description),
+                            'value' => $metric->value,
+                            'negative_impact' => $metric->impact,
+                        ];
+                    }
                 }
             }
         }
@@ -135,11 +136,11 @@ class Analyzer
     {
         return [
             'robots' => MetricFactory::get('file.robots', $this->getFileContent(
-                $this->page->getData('parsed_url.scheme') . '://' . $this->page->getData('parsed_url.host'),
+                $this->page->getFactor('parsed_url.scheme') . '://' . $this->page->getFactor('parsed_url.host'),
                 'robots.txt'
             )),
             'sitemap' => MetricFactory::get('file.sitemap', $this->getFileContent(
-                $this->page->getData('parsed_url.scheme') . '://' . $this->page->getData('parsed_url.host'),
+                $this->page->getFactor('parsed_url.scheme') . '://' . $this->page->getFactor('parsed_url.host'),
                 'sitemap.xml'
             ))
         ];

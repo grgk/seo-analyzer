@@ -13,6 +13,9 @@ class LoadTimeMetric extends AbstractMetric
      */
     public function analyze(): string
     {
+        if ($this->value === false) {
+            return false;
+        }
         $this->value = round($this->value, 2);
         if ($this->value > 3) {
             $this->impact = 8;

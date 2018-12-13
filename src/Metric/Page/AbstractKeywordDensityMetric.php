@@ -13,7 +13,7 @@ abstract class AbstractKeywordDensityMetric extends AbstractMetric
     public function __construct($inputData)
     {
         if (empty($inputData['stop_words'])) {
-            $stopWordsFilename = dirname(__DIR__) . '/locale/' . $inputData['locale'] . '_stop_words.yml';
+            $stopWordsFilename = dirname(__DIR__, 3) . '/locale/' . $inputData['locale'] . '_stop_words.yml';
             if (is_file($stopWordsFilename)) {
                 $inputData['stop_words'] = file($stopWordsFilename);
             }
@@ -38,7 +38,7 @@ abstract class AbstractKeywordDensityMetric extends AbstractMetric
             return trim($word);
         }, $stopWords);
         $stopWords = array_merge($stopWords, ['\'', '"', "-", "_"]);
-        $text = preg_replace('/[^a-zA-Z0-9\s]/', '', $text);
+        $text = strtolower(preg_replace('/[^a-zA-Z0-9\s]/', '', $text));
         $words = str_word_count($text, 1);
         $words = array_diff($words, $stopWords);
         return array_values(array_filter($words, function ($word) {
@@ -65,7 +65,7 @@ abstract class AbstractKeywordDensityMetric extends AbstractMetric
                 if ($i + $x <= $count) {
                     $phrase = [];
                     for ($y = 0; $y < $x; $y++) {
-                        $phrase[] = strtolower($words[$i + $y]);
+                        $phrase[] = $words[$i + $y];
                     }
                     $keywords[$x][] = implode(" ", $phrase);
                 }

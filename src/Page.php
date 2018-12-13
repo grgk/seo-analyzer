@@ -35,9 +35,9 @@ class Page
     public $content;
 
     /**
-     * @var array Web page data
+     * @var array Web page factors values
      */
-    public $data;
+    public $factors;
 
     /**
      * @var ClientInterface
@@ -75,15 +75,17 @@ class Page
      */
     protected function setUpUrl(string $url): string
     {
-        $this->data['parsed_url'] = parse_url($url);
-        if (empty($this->data['parsed_url']['scheme'])) {
+        $parsedUrl = parse_url($url);
+        if (empty($parsedUrl['scheme'])) {
             $url = 'http://' . $url;
-            $this->data['parsed_url'] = parse_url($url);
+            $parsedUrl = parse_url($url);
         }
-        if (strcmp($this->data['parsed_url']['scheme'], 'https') === 0) {
-            $this->data['https'] = true;
+        $this->setFactor('parsed_url', $parsedUrl);
+
+        if (strcmp($parsedUrl['scheme'], 'https') === 0) {
+            $this->setFactor('ssl', true);
         }
-        $this->data['url_length'] = strlen($this->getData('parsed_url.host') . $this->getData('parsed_url.path'));
+        $this->setFactor('url_length', strlen($parsedUrl['host'] . $this->getFactor('parsed_url.path')));
         return $url;
     }
 
@@ -105,20 +107,20 @@ class Page
             }
             return [
                 'content' => $response->getBody()->getContents(),
-                'loadTime' => $loadTime,
+                'time' => $loadTime,
                 'redirect' => $redirect
             ];
         }, 300);
-        $this->data['loadTime'] = $response['loadTime'];
+        $this->setFactor('loadTime', $response['time']);
         $this->content = $response['content'];
-        $this->data['redirect'] = $response['redirect'];
+        $this->setFactor('redirect', $response['redirect']);
 
-        if (empty($this->getData('https'))) {
+        if (empty($this->getFactor('ssl'))) {
             $httpsResponseCode = $cache->remember('httpsResponseCode', function () {
                 return $this->client->get(str_replace('http://', 'https://', $this->url))->getStatusCode();
             }, 300);
             if ($httpsResponseCode == 200) {
-                $this->data['https'] = true;
+                $this->setFactor('ssl', true);
             }
         }
     }
@@ -129,11 +131,13 @@ class Page
     public function parse()
     {
         $parser = new Parser($this->content);
-        $this->data['meta'] = $parser->getMeta();
-        $this->data['headers'] = $parser->getHeaders();
-        $this->data['title'] = $parser->getTitle();
-        $this->data['text'] = $parser->getText();
-        $this->data['alts'] = $parser->getAlts();
+        $this->setFactors([
+            'meta.meta' => $parser->getMeta(),
+            'headers' => $parser->getHeaders(),
+            'meta.title' => $parser->getTitle(),
+            'text' => $parser->getText(),
+            'alts' => $parser->getAlts()
+        ]);
     }
 
     /**
@@ -150,74 +154,160 @@ class Page
         if (empty($this->dom)) {
             $this->parse();
         }
-        $metrics = [
-            'https' => MetricFactory::get('page.https', $this->getData('https')),
-            'redirect' => MetricFactory::get('page.redirect', $this->getData('redirect')),
-            'page_size' => MetricFactory::get('page.size', strlen($this->content)),
-            'meta' => MetricFactory::get('page.meta', [
-                'title' => $this->getData('title'),
-                'meta' => $this->getData('meta')
-            ]),
-            'headers' => MetricFactory::get('page.headers', $this->getData('headers')),
-            'content_ratio' => MetricFactory::get('page.contentRatio', [
-                'content_size' => strlen(preg_replace('!\s+!', ' ', $this->getData('text'))),
-                'code_size' => strlen($this->content)
-            ]),
-            'keyword_density' => MetricFactory::get('page.keywordDensity', [
-                'text' => $this->getData('text'),
-                'locale' => $this->locale,
-                'stop_words' => $this->stopWords
-            ]),
-            'keyword_density_headers' => MetricFactory::get('page.headersKeywordDensity', [
-                'headers' => $this->getData('headers'),
-                'locale' => $this->locale,
-                'stop_words' => $this->stopWords
-            ]),
-            'alt_attributes' => MetricFactory::get('page.altAttributes', $this->getData('alts')),
-        ];
-        if (!empty($this->getData('loadTime'))) {
-            $metrics['load_time'] = MetricFactory::get('page.loadTime', $this->getData('loadTime'));
-        }
-        if (!empty($this->getData('url_length'))) {
-            $metrics['url_size'] = MetricFactory::get('page.urlSize', $this->getData('url_length'));
-        }
+        $this->setUpContentFactors();
         if (!empty($this->keyword)) {
-            $metrics['keyword_url'] = MetricFactory::get('page.keyword', [
-                'text' => $this->getData('parsed_url.host'),
-                'keyword' => $this->keyword,
-                'impact' => 5,
-                'type' => 'URL'
-            ]);
-            $metrics['keyword_path'] = MetricFactory::get('page.keyword', [
-                'text' => $this->getData('parsed_url.path'),
-                'keyword' => $this->keyword,
-                'impact' => 3,
-                'type' => 'Url-path'
-            ]);
-            $metrics['keyword_title'] = MetricFactory::get('page.keyword', [
-                'text' => $this->getData('title'),
-                'keyword' => $this->keyword,
-                'impact' => 5,
-                'type' => 'Title'
-            ]);
-            $metrics['keyword_description'] = MetricFactory::get('page.keyword', [
-                'text' => $this->getData('meta.description'),
-                'keyword' => $this->keyword,
+            $this->setUpContentKeywordFactors($this->keyword);
+        }
+        return $this->setUpMetrics($this->getMetricsConfig());
+    }
+
+    /**
+     * Sets up page content related factors for page metrics.
+     */
+    public function setUpContentFactors()
+    {
+        $this->setFactors([
+            'content.html' => $this->content,
+            'content.size' => strlen($this->content),
+            'content.ratio' => [
+                'content_size' => strlen(preg_replace('!\s+!', ' ', $this->getFactor('text'))),
+                'code_size' => strlen($this->content)
+            ],
+            'density.page' => [
+                'text' => $this->getFactor('text'), 'locale' => $this->locale, 'stop_words' => $this->stopWords
+            ],
+            'density.headers' => [
+                'headers' => $this->getFactor('headers'), 'locale' => $this->locale, 'stop_words' => $this->stopWords
+            ]
+        ]);
+    }
+
+    /**
+     * Sets up page content factors keyword related .
+     *
+     * @param string $keyword
+     */
+    public function setUpContentKeywordFactors(string $keyword)
+    {
+        $this->setFactors([
+            'keyword.url' => [
+                'text' => $this->getFactor('parsed_url.host'), 'keyword' => $keyword, 'impact' => 5, 'type' => 'URL'
+            ],
+            'keyword.path' => [
+                'text' => $this->getFactor('parsed_url.path'), 'keyword' => $keyword, 'impact' => 3, 'type' => 'UrlPath'
+            ],
+            'keyword.title' => [
+                'text' => $this->getFactor('title'), 'keyword' => $keyword, 'impact' => 5, 'type' => 'Title'
+            ],
+            'keyword.description' => [
+                'text' => $this->getFactor('meta.description'),
+                'keyword' => $keyword,
                 'impact' => 3,
                 'type' => 'Description'
-            ]);
-            $metrics['keyword_headers'] = MetricFactory::get('page.keywordHeaders', [
-                'headers' => $this->getData('headers'),
-                'keyword' => $this->keyword
-            ]);
-            $metrics['keyword_density_keyword'] = MetricFactory::get('page.keywordDensity', [
-                'text' => $this->getData('text'),
+            ],
+            'keyword.headers' => ['headers' => $this->getFactor('headers'),'keyword' => $keyword],
+            'keyword.density' => [
+                'text' => $this->getFactor('text'),
                 'locale' => $this->locale,
                 'stop_words' => $this->stopWords,
-                'keyword' => $this->keyword
+                'keyword' => $keyword
+            ]
+        ]);
+    }
+
+    /**
+     * Return metrics configuration.
+     *
+     * @return array
+     */
+    public function getMetricsConfig()
+    {
+        $metrics = ['page' => [
+            'https' => ['factor' => 'ssl'],
+            'redirect' => ['factor' => 'redirect'],
+            'size' => ['factor' => 'content.size'],
+            'meta' => ['factor' => 'meta'],
+            'headers' => ['factor' => 'headers'],
+            'contentRatio' => ['factor' => 'content.ratio'],
+            'keywordDensity' => ['metric' => 'keywordDensity', 'factor' => 'density.page'],
+            'headersKeywordDensity' => ['factor' => 'density.headers'],
+            'altAttributes' => ['factor' => 'alts'],
+            'urlSize' => ['factor' => 'url_length']
+        ]];
+        if ($this->getFactor('loadTime')) {
+            $metrics['page']['loadTime'] = ['factor' => 'loadTime'];
+        }
+        if (!empty($this->keyword)) {
+            $metrics['page'] = array_merge($metrics['page'], [
+                'keywordUrl' => ['metric' => 'keyword', 'factor' => 'keyword.url'],
+                'keywordPath' => ['metric' => 'keyword', 'factor' => 'keyword.path'],
+                'keywordTitle' => ['metric' => 'keyword', 'factor' => 'keyword.title'],
+                'keywordDescription' => ['metric' => 'keyword', 'factor' => 'keyword.description'],
+                'keywordHeaders' => ['factor' => 'keyword.headers'],
+                'keywordDensityKeyword' => ['metric' => 'keywordDensity', 'factor' => 'keyword.density']
             ]);
         }
         return $metrics;
+    }
+
+    /**
+     * Sets up page metrics.
+     *
+     * @param array $config Metrics config
+     * @return array
+     */
+    public function setUpMetrics(array $config)
+    {
+        $metrics = [];
+        if (!empty($config)) {
+            foreach ($config as $groupName => $groupContent) {
+                foreach ($groupContent as $metricName => $metricData) {
+                    if (!empty($metricData['metric'])) {
+                        $metricName = $metricData['metric'];
+                    }
+                    $metrics[$groupName . '_' . $metricName] = MetricFactory::get(
+                        $groupName . '.' . $metricName,
+                        $this->getFactor($metricData['factor'])
+                    );
+                }
+            }
+        }
+        return $metrics;
+    }
+
+    /**
+     * Sets page factor value.
+ *
+     * @param string $name
+     * @param mixed $value
+     * @return array
+     */
+    public function setFactor(string $name, $value)
+    {
+        $dots = explode(".", $name);
+        if(count($dots) > 1) {
+            $last = &$this->factors[ $dots[0] ];
+            foreach($dots as $k => $dot) {
+                if($k == 0) continue;
+                $last = &$last[$dot];
+            }
+            $last = $value;
+        } else {
+            $this->factors[$name] = $value;
+        }
+        return $this->factors;
+    }
+
+    /**
+     * Sets multiple page factors values at once.
+     *
+     * @param array $factors
+     */
+    public function setFactors(array $factors)
+    {
+        foreach ($factors as $factorName => $factorValue) {
+            $this->setFactor($factorName, $factorValue);
+        }
     }
 
     /**
@@ -226,23 +316,23 @@ class Page
      * @param string $name
      * @return mixed
      */
-    public function getData(string $name)
+    public function getFactor($name)
     {
         if (strpos($name, '.') !== false) {
             $keys = explode('.', $name);
-            $data = $this->data;
+            $factors = $this->factors;
             foreach ($keys as $innerKey) {
-                if (!array_key_exists($innerKey, $data)) {
+                if (!array_key_exists($innerKey, $factors)) {
                     return false;
                 }
-                $data = $data[$innerKey];
+                $factors = $factors[$innerKey];
             }
-            if (!empty($data)) {
-                return $data;
+            if (!empty($factors)) {
+                return $factors;
             }
         }
-        if (!empty($this->data[$name])) {
-            return $this->data[$name];
+        if (!empty($this->factors[$name])) {
+            return $this->factors[$name];
         }
         return false;
     }
