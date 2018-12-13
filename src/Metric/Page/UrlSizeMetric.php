@@ -13,7 +13,6 @@ class UrlSizeMetric extends AbstractMetric
      */
     public function analyze(): string
     {
-
         if ($this->value > 40) {
             $this->impact = 4;
             return "The site URL is very long. You should consider using some shorter URL";

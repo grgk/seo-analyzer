@@ -98,7 +98,7 @@ class Page
         $response = $cache->remember('response', function () {
             $starTime = microtime(true);
             $response = $this->client->get($this->url, ['allow_redirects' => ['track_redirects' => true]]);
-            $loadTime = number_format(( microtime(true) - $starTime), 4);
+            $loadTime = number_format((microtime(true) - $starTime), 4);
             $redirect = null;
             if (!empty($redirects = $response->getHeader('X-Guzzle-Redirect-History'))) {
                 $redirect = end($redirects);
