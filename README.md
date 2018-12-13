@@ -2,6 +2,15 @@
 
 Basic PHP library to check several SEO metrics of a website.
 
+[![Travis](https://img.shields.io/travis/grgk/seo-analyzer.svg)](https://travis-ci.org/grgk/seo-analyzer)
+[![Packagist](https://img.shields.io/packagist/v/grgk/seo-analyzer.svg)](https://github.com/grgk/seo-analyzer)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=grgk.seo-analyzer&metric=alert_status)](https://sonarqube.com/dashboard/index/grgk.seo-analyzer)
+[![SonarQube Coverage](https://sonarcloud.io/api/project_badges/measure?project=grgk.seo-analyzer&metric=coverage)](https://sonarqube.com/dashboard/index?id=grgk.seo-analyzer)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](http://opensource.org/licenses/MIT)
+[![GitHub issues](https://img.shields.io/github/issues/grgk/seo-analyzer.svg)](https://github.com/grgk/seo-analyzer/issues?q=is%3Aopen)
+[![StyleCI](https://styleci.io/repos/78752806/shield?branch=master)](https://styleci.io/repos/78752806)
+[![Code Climate](https://codeclimate.com/github/grgk/seo-analyzer/badges/gpa.svg)](https://codeclimate.com/github/grgk/seo-analyzer)
+
 ## Requirements
 * PHP 7.1 (or higher)
 
