@@ -12,10 +12,18 @@ namespace Tests;
 use PHPUnit\Framework\TestCase as PhpUnitTestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use SeoAnalyzer\Cache;
 use SeoAnalyzer\HttpClient\ClientInterface;
 
 abstract class TestCase extends PhpUnitTestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $cache = new Cache();
+        $cache->adapter->clear();
+    }
+
     /**
      * @param string|null $response Response body content to be returned
      * @return \PHPUnit\Framework\MockObject\MockObject|ClientInterface

@@ -64,8 +64,6 @@ class AnalyzerTest extends TestCase
      */
     public function testAnalyzeUrlFailOnInvalidUrl()
     {
-        $cache = new Cache();
-        $cache->adapter->clear();
         (new Analyzer())->analyzeUrl('invalid-url');
     }
 

@@ -12,8 +12,6 @@ class PageTest extends TestCase
      */
     public function testConstructor()
     {
-        $cache = new Cache();
-        $cache->adapter->clear();
         $url = 'https://www.example.org';
         $html = '<html lang="en"><body><p>testing</p></body></html>';
         $clientMock = $this->getClientMock($html);
@@ -28,8 +26,6 @@ class PageTest extends TestCase
      */
     public function testGetMetricsPassWithUrl()
     {
-        $cache = new Cache();
-        $cache->adapter->clear();
         $html = '<html lang="en"><body><p>testing</p></body></html>';
         $clientMock = $this->getClientMock($html);
         $page = new Page(null, null, $clientMock);
