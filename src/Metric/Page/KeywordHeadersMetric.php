@@ -20,9 +20,6 @@ class KeywordHeadersMetric extends AbstractMetric
                     $anyHasKeyword = true;
                 }
             }
-            if ($anyHasKeyword) {
-                return 'Good! The site headers contain the keyword phrase';
-            }
         }
 
         switch (true) {
@@ -31,6 +28,9 @@ class KeywordHeadersMetric extends AbstractMetric
                 $this->impact = 7;
                 $message = 'The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO';
             break;
+            case ($anyHasKeyword !== false):
+                $message = 'Good! The site headers contain the keyword phrase';
+                break;
             default:
                 $this->impact = 3;
                 $message = 'The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO';

@@ -58,19 +58,7 @@ abstract class AbstractKeywordDensityMetric extends AbstractMetric
     protected function analyseKeywords(string $text, array $stopWords, $maxPhraseWords = 4, $minCount = 0): array
     {
         $words = $this->getWords($text, $stopWords);
-        $count = count($words);
-        $keywords = [];
-        for ($i = 0; $i < $count; $i++) {
-            for ($x = 1; $x <= $maxPhraseWords; $x++) {
-                if ($i + $x <= $count) {
-                    $phrase = [];
-                    for ($y = 0; $y < $x; $y++) {
-                        $phrase[] = $words[$i + $y];
-                    }
-                    $keywords[$x][] = implode(" ", $phrase);
-                }
-            }
-        }
+        $keywords = $this->getKeywords($words, $maxPhraseWords);
         for ($i = 1; $i <= $maxPhraseWords; $i++) {
             if (!empty($keywords[$i])) {
                 $keywords[$i] = array_count_values($keywords[$i]);
@@ -89,6 +77,31 @@ abstract class AbstractKeywordDensityMetric extends AbstractMetric
     }
 
     /**
+     * Prepares keyword phrases form texts's words.
+     *
+     * @param array $words
+     * @param int $maxPhraseWords
+     * @return array
+     */
+    protected function getKeywords(array $words, int $maxPhraseWords): array
+    {
+        $count = count($words);
+        $keywords = [];
+        for ($i = 0; $i < $count; $i++) {
+            for ($x = 1; $x <= $maxPhraseWords; $x++) {
+                if ($i + $x <= $count) {
+                    $phrase = [];
+                    for ($y = 0; $y < $x; $y++) {
+                        $phrase[] = $words[$i + $y];
+                    }
+                    $keywords[$x][] = implode(" ", $phrase);
+                }
+            }
+        }
+        return $keywords;
+    }
+
+    /**
      * Returns overused keywords based on max count specified.
      *
      * @param array $keywords
@@ -99,17 +112,15 @@ abstract class AbstractKeywordDensityMetric extends AbstractMetric
     protected function getOverusedKeywords(array $keywords, int $maxPercentage = 10, int $maxPhraseWords = 4): array
     {
         $overusedWords = [];
-        if (!empty($keywords)) {
-            for ($i = 1; $i <= $maxPhraseWords; $i++) {
-                if (!empty($keywords[$i])) {
-                    foreach ($keywords[$i] as $keyword => $percentage) {
-                        $actualMaxPercentage = ($maxPercentage * $i);
-                        if ($actualMaxPercentage > 100) {
-                            $actualMaxPercentage = 100;
-                        }
-                        if ($percentage > $actualMaxPercentage) {
-                            $overusedWords[] = $keyword;
-                        }
+        for ($i = 1; $i <= $maxPhraseWords; $i++) {
+            if (!empty($keywords[$i])) {
+                foreach ($keywords[$i] as $keyword => $percentage) {
+                    $actualMaxPercentage = ($maxPercentage * $i);
+                    if ($actualMaxPercentage > 100) {
+                        $actualMaxPercentage = 100;
+                    }
+                    if ($percentage > $actualMaxPercentage) {
+                        $overusedWords[] = $keyword;
                     }
                 }
             }

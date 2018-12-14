@@ -233,7 +233,7 @@ class Page
      */
     public function getMetricsConfig()
     {
-        $factors = [
+        $config = [
             Factor::SSL,
             Factor::REDIRECT,
             Factor::CONTENT_SIZE,
@@ -246,10 +246,10 @@ class Page
             Factor::URL_LENGTH
         ];
         if ($this->getFactor(Factor::LOAD_TIME)) {
-            array_push($factors, Factor::LOAD_TIME);
+            array_push($config, Factor::LOAD_TIME);
         }
         if (!empty($this->keyword)) {
-            $factors = array_merge($factors, [
+            $config = array_merge($config, [
                 [Factor::KEYWORD_URL => 'keyword'],
                 [Factor::KEYWORD_PATH => 'keyword'],
                 [Factor::KEYWORD_TITLE => 'keyword'],
@@ -258,7 +258,7 @@ class Page
                 [Factor::KEYWORD_DENSITY => 'keywordDensity']
             ]);
         }
-        return $factors;
+        return $config;
     }
 
     /**
