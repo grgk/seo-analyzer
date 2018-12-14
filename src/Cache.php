@@ -47,6 +47,7 @@ class Cache
      */
     public function get(string $cacheKey)
     {
+        $value = false;
         try {
             $hasKey = $this->adapter->has($cacheKey);
         } catch (InvalidArgumentException $e) {
@@ -54,12 +55,12 @@ class Cache
         }
         if ($hasKey) {
             try {
-                return $this->adapter->get($cacheKey);
+                $value = $this->adapter->get($cacheKey);
             } catch (\Psr\SimpleCache\InvalidArgumentException $e) {
                 return false;
             }
         }
-        return false;
+        return $value;
     }
 
     /**
