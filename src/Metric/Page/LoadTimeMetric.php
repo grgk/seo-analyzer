@@ -14,7 +14,7 @@ class LoadTimeMetric extends AbstractMetric
     public function analyze(): string
     {
         if ($this->value === false) {
-            return false;
+            return 'The page load time could not be measured';
         }
         $this->value = round($this->value, 2);
         switch (true) {

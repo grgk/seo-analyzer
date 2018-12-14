@@ -243,11 +243,9 @@ class Page
             [Factor::DENSITY_PAGE => 'keywordDensity'],
             [Factor::DENSITY_HEADERS => 'headersKeywordDensity'],
             Factor::ALTS,
-            Factor::URL_LENGTH
+            Factor::URL_LENGTH,
+            Factor::LOAD_TIME
         ];
-        if ($this->getFactor(Factor::LOAD_TIME)) {
-            array_push($config, Factor::LOAD_TIME);
-        }
         if (!empty($this->keyword)) {
             $config = array_merge($config, [
                 [Factor::KEYWORD_URL => 'keyword'],
