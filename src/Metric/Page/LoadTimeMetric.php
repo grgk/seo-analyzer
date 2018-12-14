@@ -17,14 +17,19 @@ class LoadTimeMetric extends AbstractMetric
             return false;
         }
         $this->value = round($this->value, 2);
-        if ($this->value > 3) {
-            $this->impact = 8;
-            return 'The site takes very long to load. You should definitely consider rebuilding the page and/or change the hosting provider';
+        switch (true) {
+            case ($this->value > 3):
+                $this->impact = 8;
+                $message = 'The site takes very long to load. You should definitely consider rebuilding the page and/or change the hosting provider';
+                break;
+            case ($this->value > 1):
+                $this->impact = 2;
+                $message = 'You should optimise your site for faster loading, as this could have strong impact on SEO';
+                break;
+            default:
+                $message = 'The site loads very fast';
+                break;
         }
-        if ($this->value > 1) {
-            $this->impact = 2;
-            return 'You should optimise your site for faster loading, as this could have strong impact on SEO';
-        }
-        return 'The site loads very fast';
+        return $message;
     }
 }

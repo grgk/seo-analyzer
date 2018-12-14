@@ -13,23 +13,29 @@ class KeywordHeadersMetric extends AbstractMetric
      */
     public function analyze(): string
     {
-        if (empty($this->value['headers']['h1'][0])
-            or stripos($this->value['headers']['h1'][0], $this->value['keyword']) === false) {
-            $this->impact = 7;
-            return 'The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO';
-        }
         if (!empty($this->value['headers']['h2'])) {
-            $anyH2HeaderIncludeKeyword = false;
+            $anyHasKeyword = false;
             foreach ($this->value['headers']['h2'] as $h2) {
                 if (stripos($h2, $this->value['keyword']) !== false) {
-                    $anyH2HeaderIncludeKeyword = true;
+                    $anyHasKeyword = true;
                 }
             }
-            if ($anyH2HeaderIncludeKeyword) {
+            if ($anyHasKeyword) {
                 return 'Good! The site headers contain the keyword phrase';
             }
         }
-        $this->impact = 3;
-        return 'The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO';
+
+        switch (true) {
+            case (empty($this->value['headers']['h1'][0])
+                || stripos($this->value['headers']['h1'][0], $this->value['keyword']) === false):
+                $this->impact = 7;
+                $message = 'The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO';
+            break;
+            default:
+                $this->impact = 3;
+                $message = 'The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO';
+                break;
+        }
+        return $message;
     }
 }

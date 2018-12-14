@@ -87,6 +87,7 @@ class Analyzer
      * Starts analysis of a Page.
      *
      * @return array
+     * @throws HttpException
      */
     public function analyze()
     {
@@ -100,16 +101,14 @@ class Analyzer
         }
         if (!empty($this->metrics)) {
             foreach ($this->metrics as $metric) {
-                if ($metric) {
-                    if ($analysisResult = $metric->analyze()) {
-                        $results[$metric->name] = [
-                            'analysis' => $translator->trans($analysisResult),
-                            'name' => $metric->name,
-                            'description' => $translator->trans($metric->description),
-                            'value' => $metric->value,
-                            'negative_impact' => $metric->impact,
-                        ];
-                    }
+                if ($metric && $analysisResult = $metric->analyze()) {
+                    $results[$metric->name] = [
+                        'analysis' => $translator->trans($analysisResult),
+                        'name' => $metric->name,
+                        'description' => $translator->trans($metric->description),
+                        'value' => $metric->value,
+                        'negative_impact' => $metric->impact,
+                    ];
                 }
             }
         }

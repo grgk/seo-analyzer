@@ -17,8 +17,7 @@ try {
 }
 $analyzer = new Analyzer($page);
 $metrics = $analyzer->getMetrics();
-$analyzer->metrics = [$metrics['content_ratio'], $metrics['keyword_density']];
+$analyzer->metrics = [$metrics['page_content_ratio'], $metrics['page_keywordDensity']];
 $results = $analyzer->analyze();
-
 
 print_r($results);

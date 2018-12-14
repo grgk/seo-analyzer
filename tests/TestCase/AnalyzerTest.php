@@ -20,7 +20,7 @@ class AnalyzerTest extends TestCase
         $results = $analyzer->analyzeUrl('http://www.example.org');
         $this->assertTrue(is_array($results));
         $this->assertEquals(count($analyzer->getMetrics()), count($results));
-        $this->assertContains('You should avoid redirects', $results['Redirect']['analysis']);
+        $this->assertContains('You should avoid redirects', $results['PageRedirect']['analysis']);
         $this->assertArrayHasKey('analysis', current($results));
         $this->assertArrayHasKey('name', current($results));
         $this->assertArrayHasKey('description', current($results));
@@ -38,7 +38,7 @@ class AnalyzerTest extends TestCase
         $results = $analyzer->analyzeUrl('http://www.example.org', 'keyword', 'pl_PL');
         $this->assertTrue(is_array($results));
         $this->assertEquals(count($analyzer->getMetrics()), count($results));
-        $this->assertContains('Powinienieś unikać przekierowań', $results['Redirect']['analysis']);
+        $this->assertContains('Powinienieś unikać przekierowań', $results['PageRedirect']['analysis']);
     }
 
     /**
@@ -122,7 +122,7 @@ class AnalyzerTest extends TestCase
         $page->content = '<html lang="en"></html>';
         $analyzer = new Analyzer($page);
         $results = $analyzer->analyze();
-        $this->assertEquals('The size of your page is ok', $results['Size']['analysis']);
+        $this->assertEquals('The size of your page is ok', $results['PageContentSize']['analysis']);
     }
 
     /**
@@ -135,7 +135,7 @@ class AnalyzerTest extends TestCase
         $analyzer = new Analyzer($page);
         $analyzer->locale = 'pl_PL';
         $results = $analyzer->analyze();
-        $this->assertEquals('Rozmiar strony jest w porządku', $results['Size']['analysis']);
+        $this->assertEquals('Rozmiar strony jest w porządku', $results['PageContentSize']['analysis']);
     }
 
     /**

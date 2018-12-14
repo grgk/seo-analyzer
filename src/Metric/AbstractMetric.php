@@ -33,7 +33,7 @@ abstract class AbstractMetric implements MetricInterface
     public function __construct($inputData)
     {
         if (empty($this->name)) {
-            $this->name = str_replace('Metric', '', (new ReflectionClass($this))->getShortName());
+            $this->name = str_replace(['SeoAnalyzer\\', 'Metric', '\\'], '', (new ReflectionClass($this))->getName());
         }
         $this->value = $inputData;
     }

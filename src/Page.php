@@ -80,12 +80,15 @@ class Page
             $url = 'http://' . $url;
             $parsedUrl = parse_url($url);
         }
-        $this->setFactor('parsed_url', $parsedUrl);
+        $this->setFactor(Factor::URL_PARSED, $parsedUrl);
 
         if (strcmp($parsedUrl['scheme'], 'https') === 0) {
-            $this->setFactor('ssl', true);
+            $this->setFactor(Factor::SSL, true);
         }
-        $this->setFactor('url_length', strlen($parsedUrl['host'] . $this->getFactor('parsed_url.path')));
+        $this->setFactor(
+            Factor::URL_LENGTH,
+            strlen($this->getFactor(Factor::URL_PARSED_HOST) . $this->getFactor(Factor::URL_PARSED_PATH))
+        );
         return $url;
     }
 
@@ -111,16 +114,16 @@ class Page
                 'redirect' => $redirect
             ];
         }, 300);
-        $this->setFactor('loadTime', $response['time']);
+        $this->setFactor(Factor::LOAD_TIME, $response['time']);
         $this->content = $response['content'];
-        $this->setFactor('redirect', $response['redirect']);
+        $this->setFactor(Factor::REDIRECT, $response['redirect']);
 
-        if (empty($this->getFactor('ssl'))) {
+        if (empty($this->getFactor(Factor::SSL))) {
             $httpsResponseCode = $cache->remember('httpsResponseCode', function () {
                 return $this->client->get(str_replace('http://', 'https://', $this->url))->getStatusCode();
             }, 300);
             if ($httpsResponseCode == 200) {
-                $this->setFactor('ssl', true);
+                $this->setFactor(Factor::SSL, true);
             }
         }
     }
@@ -132,11 +135,11 @@ class Page
     {
         $parser = new Parser($this->content);
         $this->setFactors([
-            'meta.meta' => $parser->getMeta(),
-            'headers' => $parser->getHeaders(),
-            'meta.title' => $parser->getTitle(),
-            'text' => $parser->getText(),
-            'alts' => $parser->getAlts()
+            Factor::META_META => $parser->getMeta(),
+            Factor::HEADERS => $parser->getHeaders(),
+            Factor::META_TITLE => $parser->getTitle(),
+            Factor::TEXT => $parser->getText(),
+            Factor::ALTS => $parser->getAlts()
         ]);
     }
 
@@ -167,17 +170,19 @@ class Page
     public function setUpContentFactors()
     {
         $this->setFactors([
-            'content.html' => $this->content,
-            'content.size' => strlen($this->content),
-            'content.ratio' => [
-                'content_size' => strlen(preg_replace('!\s+!', ' ', $this->getFactor('text'))),
+            Factor::CONTENT_HTML => $this->content,
+            Factor::CONTENT_SIZE => strlen($this->content),
+            Factor::CONTENT_RATIO => [
+                'content_size' => strlen(preg_replace('!\s+!', ' ', $this->getFactor(Factor::TEXT))),
                 'code_size' => strlen($this->content)
             ],
-            'density.page' => [
-                'text' => $this->getFactor('text'), 'locale' => $this->locale, 'stop_words' => $this->stopWords
+            Factor::DENSITY_PAGE => [
+                'text' => $this->getFactor(Factor::TEXT), 'locale' => $this->locale, 'stop_words' => $this->stopWords
             ],
-            'density.headers' => [
-                'headers' => $this->getFactor('headers'), 'locale' => $this->locale, 'stop_words' => $this->stopWords
+            Factor::DENSITY_HEADERS => [
+                'headers' => $this->getFactor(Factor::HEADERS),
+                'locale' => $this->locale,
+                'stop_words' => $this->stopWords
             ]
         ]);
     }
@@ -190,24 +195,30 @@ class Page
     public function setUpContentKeywordFactors(string $keyword)
     {
         $this->setFactors([
-            'keyword.url' => [
-                'text' => $this->getFactor('parsed_url.host'), 'keyword' => $keyword, 'impact' => 5, 'type' => 'URL'
+            Factor::KEYWORD_URL => [
+                'text' => $this->getFactor(Factor::URL_PARSED_HOST),
+                'keyword' => $keyword,
+                'impact' => 5,
+                'type' => 'URL'
             ],
-            'keyword.path' => [
-                'text' => $this->getFactor('parsed_url.path'), 'keyword' => $keyword, 'impact' => 3, 'type' => 'UrlPath'
+            Factor::KEYWORD_PATH => [
+                'text' => $this->getFactor(Factor::URL_PARSED_PATH),
+                'keyword' => $keyword,
+                'impact' => 3,
+                'type' => 'UrlPath'
             ],
-            'keyword.title' => [
-                'text' => $this->getFactor('title'), 'keyword' => $keyword, 'impact' => 5, 'type' => 'Title'
+            Factor::KEYWORD_TITLE => [
+                'text' => $this->getFactor(Factor::TITLE), 'keyword' => $keyword, 'impact' => 5, 'type' => 'Title'
             ],
-            'keyword.description' => [
-                'text' => $this->getFactor('meta.description'),
+            Factor::KEYWORD_DESCRIPTION => [
+                'text' => $this->getFactor(Factor::META_DESCRIPTION),
                 'keyword' => $keyword,
                 'impact' => 3,
                 'type' => 'Description'
             ],
-            'keyword.headers' => ['headers' => $this->getFactor('headers'),'keyword' => $keyword],
-            'keyword.density' => [
-                'text' => $this->getFactor('text'),
+            Factor::KEYWORD_HEADERS => ['headers' => $this->getFactor(Factor::HEADERS), 'keyword' => $keyword],
+            Factor::KEYWORD_DENSITY => [
+                'text' => $this->getFactor(Factor::TEXT),
                 'locale' => $this->locale,
                 'stop_words' => $this->stopWords,
                 'keyword' => $keyword
@@ -222,32 +233,32 @@ class Page
      */
     public function getMetricsConfig()
     {
-        $metrics = ['page' => [
-            'https' => ['factor' => 'ssl'],
-            'redirect' => ['factor' => 'redirect'],
-            'size' => ['factor' => 'content.size'],
-            'meta' => ['factor' => 'meta'],
-            'headers' => ['factor' => 'headers'],
-            'contentRatio' => ['factor' => 'content.ratio'],
-            'keywordDensity' => ['metric' => 'keywordDensity', 'factor' => 'density.page'],
-            'headersKeywordDensity' => ['factor' => 'density.headers'],
-            'altAttributes' => ['factor' => 'alts'],
-            'urlSize' => ['factor' => 'url_length']
-        ]];
-        if ($this->getFactor('loadTime')) {
-            $metrics['page']['loadTime'] = ['factor' => 'loadTime'];
+        $factors = [
+            Factor::SSL,
+            Factor::REDIRECT,
+            Factor::CONTENT_SIZE,
+            Factor::META,
+            Factor::HEADERS,
+            Factor::CONTENT_RATIO,
+            [Factor::DENSITY_PAGE => 'keywordDensity'],
+            [Factor::DENSITY_HEADERS => 'headersKeywordDensity'],
+            Factor::ALTS,
+            Factor::URL_LENGTH
+        ];
+        if ($this->getFactor(Factor::LOAD_TIME)) {
+            array_push($factors, Factor::LOAD_TIME);
         }
         if (!empty($this->keyword)) {
-            $metrics['page'] = array_merge($metrics['page'], [
-                'keywordUrl' => ['metric' => 'keyword', 'factor' => 'keyword.url'],
-                'keywordPath' => ['metric' => 'keyword', 'factor' => 'keyword.path'],
-                'keywordTitle' => ['metric' => 'keyword', 'factor' => 'keyword.title'],
-                'keywordDescription' => ['metric' => 'keyword', 'factor' => 'keyword.description'],
-                'keywordHeaders' => ['factor' => 'keyword.headers'],
-                'keywordDensityKeyword' => ['metric' => 'keywordDensity', 'factor' => 'keyword.density']
+            $factors = array_merge($factors, [
+                [Factor::KEYWORD_URL => 'keyword'],
+                [Factor::KEYWORD_PATH => 'keyword'],
+                [Factor::KEYWORD_TITLE => 'keyword'],
+                [Factor::KEYWORD_DESCRIPTION => 'keyword'],
+                Factor::KEYWORD_HEADERS,
+                [Factor::KEYWORD_DENSITY => 'keywordDensity']
             ]);
         }
-        return $metrics;
+        return $factors;
     }
 
     /**
@@ -260,16 +271,16 @@ class Page
     {
         $metrics = [];
         if (!empty($config)) {
-            foreach ($config as $groupName => $groupContent) {
-                foreach ($groupContent as $metricName => $metricData) {
-                    if (!empty($metricData['metric'])) {
-                        $metricName = $metricData['metric'];
-                    }
-                    $metrics[$groupName . '_' . $metricName] = MetricFactory::get(
-                        $groupName . '.' . $metricName,
-                        $this->getFactor($metricData['factor'])
-                    );
+            foreach ($config as $factor) {
+                $metric = $factor;
+                if (is_array($factor)) {
+                    $metric = current($factor);
+                    $factor = key($factor);
                 }
+                $metrics['page_' . str_replace('.', '_', $metric)] = MetricFactory::get(
+                    'page.' . $metric,
+                    $this->getFactor($factor)
+                );
             }
         }
         return $metrics;
@@ -277,7 +288,7 @@ class Page
 
     /**
      * Sets page factor value.
- *
+     *
      * @param string $name
      * @param mixed $value
      * @return array
@@ -286,7 +297,7 @@ class Page
     {
         $dots = explode(".", $name);
         if (count($dots) > 1) {
-            $last = &$this->factors[ $dots[0] ];
+            $last = &$this->factors[$dots[0]];
             foreach ($dots as $k => $dot) {
                 if ($k == 0) {
                     continue;
@@ -313,7 +324,7 @@ class Page
     }
 
     /**
-     * Returns data collected by it's key name.
+     * Returns factor data collected by it's key name.
      *
      * @param string $name
      * @return mixed
@@ -321,21 +332,30 @@ class Page
     public function getFactor($name)
     {
         if (strpos($name, '.') !== false) {
-            $keys = explode('.', $name);
-            $factors = $this->factors;
-            foreach ($keys as $innerKey) {
-                if (!array_key_exists($innerKey, $factors)) {
-                    return false;
-                }
-                $factors = $factors[$innerKey];
-            }
-            if (!empty($factors)) {
-                return $factors;
-            }
+            return $this->getNestedFactor($name);
         }
         if (!empty($this->factors[$name])) {
             return $this->factors[$name];
         }
         return false;
+    }
+
+    /**
+     * Returns factor data collected by it's key name.
+     *
+     * @param string $name
+     * @return mixed
+     */
+    protected function getNestedFactor($name)
+    {
+        $keys = explode('.', $name);
+        $value = $this->factors;
+        foreach ($keys as $innerKey) {
+            if (!array_key_exists($innerKey, $value)) {
+                return false;
+            }
+            $value = $value[$innerKey];
+        }
+        return $value;
     }
 }

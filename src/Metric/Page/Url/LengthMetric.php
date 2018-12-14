@@ -1,10 +1,10 @@
 <?php
 
-namespace SeoAnalyzer\Metric\Page;
+namespace SeoAnalyzer\Metric\Page\Url;
 
 use SeoAnalyzer\Metric\AbstractMetric;
 
-class UrlSizeMetric extends AbstractMetric
+class LengthMetric extends AbstractMetric
 {
     public $description = 'The size of the page URL';
 
@@ -13,7 +13,6 @@ class UrlSizeMetric extends AbstractMetric
      */
     public function analyze(): string
     {
-
         if ($this->value > 40) {
             $this->impact = 4;
             return "The site URL is very long. You should consider using some shorter URL";

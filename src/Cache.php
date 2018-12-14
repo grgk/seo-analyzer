@@ -74,7 +74,7 @@ class Cache
     {
         try {
             return $this->adapter->set($cacheKey, $value, $ttl);
-        } catch (InvalidArgumentException $e) {
+        } catch (\Psr\SimpleCache\InvalidArgumentException $e) {
             return false;
         }
     }
