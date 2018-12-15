@@ -15,8 +15,11 @@ class MetricFactoryTest extends TestCase
         $this->assertEquals(4076, $metric->value);
     }
 
+    /**
+     * @expectedException \ReflectionException
+     */
     public function testGetFailOnNotExistingClass()
     {
-        $this->assertFalse(MetricFactory::get('page.not_existing', 4076));
+        MetricFactory::get('page.not_existing', 4076);
     }
 }
