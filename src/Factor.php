@@ -9,7 +9,7 @@ class Factor
     const PATH = 'path';
     const HOST = 'host';
     const LENGTH = 'length';
-    const SSL = 'ssl';
+    const SSL = 'SSL';
     const LOAD_TIME = 'loadTime';
     const REDIRECT = 'redirect';
     const HEADERS = 'headers';

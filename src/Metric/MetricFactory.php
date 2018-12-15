@@ -24,6 +24,6 @@ class MetricFactory
             }
             return $metric;
         }
-        return false;
+        throw new \ReflectionException('Metric class ' . $class .' not exists');
     }
 }
