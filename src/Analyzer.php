@@ -55,6 +55,7 @@ class Analyzer
      * @param string|null $locale
      * @return array
      * @throws HttpException
+     * @throws \ReflectionException
      */
     public function analyzeUrl(string $url, string $keyword = null, string $locale = null): array
     {
@@ -75,6 +76,7 @@ class Analyzer
      * @param string|null $locale
      * @return array
      * @throws HttpException
+     * @throws \ReflectionException
      */
     public function analyzeFile(string $filename, string $locale = null): array
     {
@@ -88,6 +90,7 @@ class Analyzer
      *
      * @return array
      * @throws HttpException
+     * @throws \ReflectionException
      */
     public function analyze()
     {
@@ -120,6 +123,7 @@ class Analyzer
      *
      * @return array
      * @throws HttpException
+     * @throws \ReflectionException
      */
     public function getMetrics(): array
     {
@@ -130,6 +134,7 @@ class Analyzer
      * Returns file related metrics.
      *
      * @return array
+     * @throws \ReflectionException
      */
     public function getFilesMetrics(): array
     {

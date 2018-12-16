@@ -9,6 +9,12 @@ use SeoAnalyzer\Metric\MetricFactory;
 
 class Page
 {
+    const LOCALE = 'locale';
+    const STOP_WORDS = 'stop_words';
+    const KEYWORD = 'keyword';
+    const IMPACT = 'impact';
+    const TEXT = 'text';
+
     /**
      * @var string URL of web page
      */
@@ -117,7 +123,6 @@ class Page
         $this->setFactor(Factor::LOAD_TIME, $response['time']);
         $this->content = $response['content'];
         $this->setFactor(Factor::REDIRECT, $response['redirect']);
-
         if (empty($this->getFactor(Factor::SSL))) {
             $httpsResponseCode = $cache->remember('httpsResponseCode', function () {
                 return $this->client->get(str_replace('http://', 'https://', $this->url))->getStatusCode();
@@ -148,8 +153,31 @@ class Page
      *
      * @return array
      * @throws HttpException
+     * @throws \ReflectionException
      */
     public function getMetrics(): array
+    {
+        $this->initializeFactors();
+        return $this->setUpMetrics($this->getMetricsConfig());
+    }
+
+    /**
+     * Sets up and returns page metrics based on configuration specified.
+     * @param array $config
+     * @return array
+     * @throws \ReflectionException
+     * @throws HttpException
+     */
+    public function setMetrics(array $config)
+    {
+        $this->initializeFactors();
+        return $this->setUpMetrics($config);
+    }
+
+    /**
+     * @throws HttpException
+     */
+    private function initializeFactors()
     {
         if (empty($this->content)) {
             $this->getContent();
@@ -161,7 +189,6 @@ class Page
         if (!empty($this->keyword)) {
             $this->setUpContentKeywordFactors($this->keyword);
         }
-        return $this->setUpMetrics($this->getMetricsConfig());
     }
 
     /**
@@ -177,12 +204,14 @@ class Page
                 'code_size' => strlen($this->content)
             ],
             Factor::DENSITY_PAGE => [
-                'text' => $this->getFactor(Factor::TEXT), 'locale' => $this->locale, 'stop_words' => $this->stopWords
+                self::TEXT => $this->getFactor(Factor::TEXT),
+                self::LOCALE => $this->locale,
+                self::STOP_WORDS => $this->stopWords
             ],
             Factor::DENSITY_HEADERS => [
                 'headers' => $this->getFactor(Factor::HEADERS),
-                'locale' => $this->locale,
-                'stop_words' => $this->stopWords
+                self::LOCALE => $this->locale,
+                self::STOP_WORDS => $this->stopWords
             ]
         ]);
     }
@@ -196,32 +225,35 @@ class Page
     {
         $this->setFactors([
             Factor::KEYWORD_URL => [
-                'text' => $this->getFactor(Factor::URL_PARSED_HOST),
-                'keyword' => $keyword,
-                'impact' => 5,
+                self::TEXT => $this->getFactor(Factor::URL_PARSED_HOST),
+                self::KEYWORD => $keyword,
+                self::IMPACT => 5,
                 'type' => 'URL'
             ],
             Factor::KEYWORD_PATH => [
-                'text' => $this->getFactor(Factor::URL_PARSED_PATH),
-                'keyword' => $keyword,
-                'impact' => 3,
+                self::TEXT => $this->getFactor(Factor::URL_PARSED_PATH),
+                self::KEYWORD => $keyword,
+                self::IMPACT => 3,
                 'type' => 'UrlPath'
             ],
             Factor::KEYWORD_TITLE => [
-                'text' => $this->getFactor(Factor::TITLE), 'keyword' => $keyword, 'impact' => 5, 'type' => 'Title'
+                self::TEXT => $this->getFactor(Factor::TITLE),
+                self::KEYWORD => $keyword,
+                self::IMPACT => 5,
+                'type' => 'Title'
             ],
             Factor::KEYWORD_DESCRIPTION => [
-                'text' => $this->getFactor(Factor::META_DESCRIPTION),
-                'keyword' => $keyword,
-                'impact' => 3,
+                self::TEXT => $this->getFactor(Factor::META_DESCRIPTION),
+                self::KEYWORD => $keyword,
+                self::IMPACT => 3,
                 'type' => 'Description'
             ],
-            Factor::KEYWORD_HEADERS => ['headers' => $this->getFactor(Factor::HEADERS), 'keyword' => $keyword],
+            Factor::KEYWORD_HEADERS => ['headers' => $this->getFactor(Factor::HEADERS), self::KEYWORD => $keyword],
             Factor::KEYWORD_DENSITY => [
-                'text' => $this->getFactor(Factor::TEXT),
-                'locale' => $this->locale,
-                'stop_words' => $this->stopWords,
-                'keyword' => $keyword
+                self::TEXT => $this->getFactor(Factor::TEXT),
+                self::LOCALE => $this->locale,
+                self::STOP_WORDS => $this->stopWords,
+                self::KEYWORD => $keyword
             ]
         ]);
     }
@@ -248,10 +280,10 @@ class Page
         ];
         if (!empty($this->keyword)) {
             $config = array_merge($config, [
-                [Factor::KEYWORD_URL => 'keyword'],
-                [Factor::KEYWORD_PATH => 'keyword'],
-                [Factor::KEYWORD_TITLE => 'keyword'],
-                [Factor::KEYWORD_DESCRIPTION => 'keyword'],
+                [Factor::KEYWORD_URL => self::KEYWORD],
+                [Factor::KEYWORD_PATH => self::KEYWORD],
+                [Factor::KEYWORD_TITLE => self::KEYWORD],
+                [Factor::KEYWORD_DESCRIPTION => self::KEYWORD],
                 Factor::KEYWORD_HEADERS,
                 [Factor::KEYWORD_DENSITY => 'keywordDensity']
             ]);
@@ -264,6 +296,7 @@ class Page
      *
      * @param array $config Metrics config
      * @return array
+     * @throws \ReflectionException
      */
     public function setUpMetrics(array $config)
     {

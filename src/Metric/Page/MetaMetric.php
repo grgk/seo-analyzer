@@ -18,11 +18,11 @@ class MetaMetric extends AbstractMetric
                 $this->impact = 5;
                 $message = 'The page title length should be between 10 and 60 characters. Title should also include your main keyword';
                 break;
-            case (empty($this->value['meta']['description'])):
+            case (empty($this->value['meta'][self::DESCRIPTION])):
                 $this->impact = 5;
                 $message = 'Missing page meta description tag. We strongly recommend to add it. It should be between 30 and 120 characters and should include your main keyword';
                 break;
-            case (strlen($this->value['meta']['description']) < 30 || strlen($this->value['meta']['description']) > 120):
+            case (strlen($this->value['meta'][self::DESCRIPTION]) < 30 || strlen($this->value['meta'][self::DESCRIPTION]) > 120):
                 $this->impact = 3;
                 $message = "The page meta description length should be between 30 and 120 characters. Description should also include your main keyword";
                 break;

@@ -12,7 +12,9 @@ use SeoAnalyzer\Analyzer;
 try {
     $results = (new Analyzer())->analyzeUrl('https://www.msn.com/en-us', 'msn');
 } catch (\SeoAnalyzer\HttpClient\Exception\HttpException $e) {
-    // Can't open URL
+    echo "Error loading page: " . $e->getMessage();
+} catch (ReflectionException $e) {
+    echo "Error loading metric file: " . $e->getMessage();
 }
 
 print_r($results);

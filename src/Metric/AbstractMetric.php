@@ -6,6 +6,9 @@ use ReflectionClass;
 
 abstract class AbstractMetric implements MetricInterface
 {
+    const HEADERS = 'headers';
+    const DESCRIPTION = 'description';
+
     /**
      * @var string Metric name
      */

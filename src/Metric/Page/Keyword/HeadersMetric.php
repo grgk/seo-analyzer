@@ -13,14 +13,14 @@ class HeadersMetric extends AbstractMetric
      */
     public function analyze(): string
     {
-        if (empty($this->value['headers']['h1'][0])
-            || stripos($this->value['headers']['h1'][0], $this->value['keyword']) === false) {
+        if (empty($this->value[self::HEADERS]['h1'][0])
+            || stripos($this->value[self::HEADERS]['h1'][0], $this->value['keyword']) === false) {
             $this->impact = 7;
             return 'The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO';
         }
-        if (!empty($this->value['headers']['h2'])) {
+        if (!empty($this->value[self::HEADERS]['h2'])) {
             $anyHasKeyword = false;
-            foreach ($this->value['headers']['h2'] as $h2) {
+            foreach ($this->value[self::HEADERS]['h2'] as $h2) {
                 if (stripos($h2, $this->value['keyword']) !== false) {
                     $anyHasKeyword = true;
                 }
