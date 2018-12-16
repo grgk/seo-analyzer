@@ -106,7 +106,7 @@ class Page
     public function getContent()
     {
         $cache = new Cache();
-        $response = $cache->remember('response', function () {
+        $response = $cache->remember('response'. md5($this->url), function () {
             $starTime = microtime(true);
             $response = $this->client->get($this->url, ['allow_redirects' => ['track_redirects' => true]]);
             $loadTime = number_format((microtime(true) - $starTime), 4);
@@ -124,7 +124,7 @@ class Page
         $this->content = $response['content'];
         $this->setFactor(Factor::REDIRECT, $response['redirect']);
         if (empty($this->getFactor(Factor::SSL))) {
-            $httpsResponseCode = $cache->remember('httpsResponseCode', function () {
+            $httpsResponseCode = $cache->remember('httpsResponseCode' . md5('https://', $this->url), function () {
                 return $this->client->get(str_replace('http://', 'https://', $this->url))->getStatusCode();
             }, 300);
             if ($httpsResponseCode == 200) {
