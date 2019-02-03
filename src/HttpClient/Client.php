@@ -15,7 +15,7 @@ class Client implements ClientInterface
     public function get(string $url, array $options = []): ResponseInterface
     {
         try {
-            return (new GuzzleClient())->request('GET', $url, $options);
+            return (new GuzzleClient(['verify' => false]))->request('GET', $url, $options);
         } catch (GuzzleException $e) {
             throw new HttpException('Error getting url: ' . $e->getMessage(), $e->getCode(), $e);
         }
