@@ -140,11 +140,11 @@ class Analyzer
     {
         return [
             'robots' => MetricFactory::get('file.robots', $this->getFileContent(
-                $this->page->getFactor('parsed_url.scheme') . '://' . $this->page->getFactor('parsed_url.host'),
+                $this->page->getFactor('url.parsed.scheme') . '://' . $this->page->getFactor('url.parsed.host'),
                 'robots.txt'
             )),
             'sitemap' => MetricFactory::get('file.sitemap', $this->getFileContent(
-                $this->page->getFactor('parsed_url.scheme') . '://' . $this->page->getFactor('parsed_url.host'),
+                $this->page->getFactor('url.parsed.scheme') . '://' . $this->page->getFactor('url.parsed.host'),
                 'sitemap.xml'
             ))
         ];
