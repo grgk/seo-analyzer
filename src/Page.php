@@ -125,7 +125,11 @@ class Page
         $this->setFactor(Factor::REDIRECT, $response['redirect']);
         if (empty($this->getFactor(Factor::SSL))) {
             $httpsResponseCode = $cache->remember('httpsResponseCode' . md5('https://', $this->url), function () {
-                return $this->client->get(str_replace('http://', 'https://', $this->url))->getStatusCode();
+                try {
+                    return $this->client->get(str_replace('http://', 'https://', $this->url))->getStatusCode();
+                } catch (HttpException $e) {
+                    return false;
+                }
             }, 300);
             if ($httpsResponseCode == 200) {
                 $this->setFactor(Factor::SSL, true);
