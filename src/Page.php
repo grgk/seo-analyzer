@@ -108,7 +108,15 @@ class Page
         $cache = new Cache();
         $response = $cache->remember('response'. md5($this->url), function () {
             $starTime = microtime(true);
-            $response = $this->client->get($this->url, ['allow_redirects' => ['track_redirects' => true]]);
+            $response = $this->client->get(
+                $this->url,
+                [
+                    'allow_redirects' => ['track_redirects' => true],
+                    'headers' => [
+                        'User-Agent' => 'grgk-seo-analyzer/1.0'
+                    ]
+                ]
+            );
             $loadTime = number_format((microtime(true) - $starTime), 4);
             $redirect = null;
             if (!empty($redirects = $response->getHeader('X-Guzzle-Redirect-History'))) {
