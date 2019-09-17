@@ -15,5 +15,5 @@ addons:
 
 script:
   - vendor/bin/phpunit --coverage-clover build/logs/phpunit/clover.xml --log-junit build/logs/phpunit/junit.xml --coverage-xml build/logs/phpunit/coverage/xml --coverage-html build/logs/phpunit/coverage/html
-  - ./sonarphp-xml-patcher.py
+  - python3 sonarphp-xml-patcher.py
   - sonar-scanner

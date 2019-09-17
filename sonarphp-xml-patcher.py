@@ -1,4 +1,4 @@
-#!/usr/bin python
+#!/usr/bin/env python3
 import xml.etree.ElementTree as ET
 
 et = ET.parse('build/logs/phpunit/junit.xml')
