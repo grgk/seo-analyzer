@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin python
 import xml.etree.ElementTree as ET
 
-et = ET.parse('/home/travis/build/grgk/seo-analyzer/build/logs/phpunit/junit.xml')
+et = ET.parse('build/logs/phpunit/junit.xml')
 root = et.getroot()
 
 for mastersuites in root:
@@ -15,4 +15,4 @@ for mastersuites in root:
             if not "file" in subsuite.attrib:
                 subsuite.attrib['file'] = filename
 
-et.write('/home/travis/build/grgk/seo-analyzer/build/logs/phpunit/junit.xml')
+et.write('build/logs/phpunit/junit.xml')
