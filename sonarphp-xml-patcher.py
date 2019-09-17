@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import xml.etree.ElementTree as ET
 
 et = ET.parse('/home/travis/build/grgk/seo-analyzer/build/logs/phpunit/junit.xml')
