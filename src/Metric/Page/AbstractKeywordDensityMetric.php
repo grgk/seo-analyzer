@@ -115,7 +115,7 @@ abstract class AbstractKeywordDensityMetric extends AbstractMetric
         for ($i = 1; $i <= $maxPhraseWords; $i++) {
             if (!empty($keywords[$i])) {
                 foreach ($keywords[$i] as $keyword => $percentage) {
-                    $actualMaxPercentage = ($maxPercentage * $i);
+                    $actualMaxPercentage = $maxPercentage * $i;
                     if ($actualMaxPercentage > 100) {
                         $actualMaxPercentage = 100;
                     }

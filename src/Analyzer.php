@@ -160,7 +160,7 @@ class Analyzer
     protected function getFileContent($url, $filename)
     {
         $cache = new Cache();
-        $cacheKey = md5($url . '/' . $filename);
+        $cacheKey = 'file_content_' . base64_encode($url . '/' . $filename);
         if ($value = $cache->get($cacheKey)) {
             return $value;
         }

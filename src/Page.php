@@ -6,6 +6,7 @@ use SeoAnalyzer\HttpClient\Client;
 use SeoAnalyzer\HttpClient\ClientInterface;
 use SeoAnalyzer\HttpClient\Exception\HttpException;
 use SeoAnalyzer\Metric\MetricFactory;
+use ReflectionException;
 
 class Page
 {
@@ -14,6 +15,7 @@ class Page
     const KEYWORD = 'keyword';
     const IMPACT = 'impact';
     const TEXT = 'text';
+    const HEADERS = 'headers';
 
     /**
      * @var string URL of web page
@@ -56,7 +58,6 @@ class Page
      * @param string|null $url
      * @param string|null $locale
      * @param ClientInterface|null $client
-     * @throws HttpException
      */
     public function __construct(string $url = null, string $locale = null, ClientInterface $client = null)
     {
@@ -100,23 +101,32 @@ class Page
 
     /**
      * Downloads page content from URL specified and sets up some base metrics.
-     *
-     * @throws HttpException
      */
     public function getContent()
     {
+        $pageLoadFactors = $this->getPageLoadFactors();
+        $this->setFactor(Factor::LOAD_TIME, $pageLoadFactors['time']);
+        $this->content = $pageLoadFactors['content'];
+        $this->setFactor(Factor::REDIRECT, $pageLoadFactors['redirect']);
+        if (empty($this->getFactor(Factor::SSL))) {
+            if ($this->getSSLResponseCode() == 200) {
+                $this->setFactor(Factor::SSL, true);
+            }
+        }
+    }
+
+    /**
+     * Sets page load related factors.
+     *
+     * @param int $ttl Cache ttl in seconds.
+     * @return array
+     */
+    protected function getPageLoadFactors(int $ttl = 300): array
+    {
         $cache = new Cache();
-        $response = $cache->remember('response'. md5($this->url), function () {
+        return $cache->remember('page_content_'. base64_encode($this->url), function () {
             $starTime = microtime(true);
-            $response = $this->client->get(
-                $this->url,
-                [
-                    'allow_redirects' => ['track_redirects' => true],
-                    'headers' => [
-                        'User-Agent' => 'grgk-seo-analyzer/1.0'
-                    ]
-                ]
-            );
+            $response = $this->client->get($this->url, $this->getHttpClientOptions());
             $loadTime = number_format((microtime(true) - $starTime), 4);
             $redirect = null;
             if (!empty($redirects = $response->getHeader('X-Guzzle-Redirect-History'))) {
@@ -127,22 +137,44 @@ class Page
                 'time' => $loadTime,
                 'redirect' => $redirect
             ];
-        }, 300);
-        $this->setFactor(Factor::LOAD_TIME, $response['time']);
-        $this->content = $response['content'];
-        $this->setFactor(Factor::REDIRECT, $response['redirect']);
-        if (empty($this->getFactor(Factor::SSL))) {
-            $httpsResponseCode = $cache->remember('httpsResponseCode' . md5('https://', $this->url), function () {
+        }, $ttl);
+    }
+
+    /**
+     * Returns https response code.
+     *
+     * @param int $ttl Cache ttl in seconds.
+     * @return int|false Http code or false on failure.
+     */
+    protected function getSSLResponseCode(int $ttl = 300)
+    {
+        $cache = new Cache();
+        return $cache->remember(
+            'https_response_code_' . base64_encode('https://' . $this->url),
+            function () {
                 try {
                     return $this->client->get(str_replace('http://', 'https://', $this->url))->getStatusCode();
                 } catch (HttpException $e) {
                     return false;
                 }
-            }, 300);
-            if ($httpsResponseCode == 200) {
-                $this->setFactor(Factor::SSL, true);
-            }
-        }
+            },
+            $ttl
+        );
+    }
+
+    /**
+     * Returns http client options used for making requests.
+     *
+     * @return array
+     */
+    protected function getHttpClientOptions()
+    {
+        return [
+            'allow_redirects' => ['track_redirects' => true],
+            self::HEADERS => [
+                'User-Agent' => 'grgk-seo-analyzer/1.0'
+            ]
+        ];
     }
 
     /**
@@ -165,7 +197,7 @@ class Page
      *
      * @return array
      * @throws HttpException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getMetrics(): array
     {
@@ -177,7 +209,7 @@ class Page
      * Sets up and returns page metrics based on configuration specified.
      * @param array $config
      * @return array
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws HttpException
      */
     public function setMetrics(array $config)
@@ -186,9 +218,6 @@ class Page
         return $this->setUpMetrics($config);
     }
 
-    /**
-     * @throws HttpException
-     */
     private function initializeFactors()
     {
         if (empty($this->content)) {
@@ -221,7 +250,7 @@ class Page
                 self::STOP_WORDS => $this->stopWords
             ],
             Factor::DENSITY_HEADERS => [
-                'headers' => $this->getFactor(Factor::HEADERS),
+                self::HEADERS => $this->getFactor(Factor::HEADERS),
                 self::LOCALE => $this->locale,
                 self::STOP_WORDS => $this->stopWords
             ]
@@ -260,7 +289,7 @@ class Page
                 self::IMPACT => 3,
                 'type' => 'Description'
             ],
-            Factor::KEYWORD_HEADERS => ['headers' => $this->getFactor(Factor::HEADERS), self::KEYWORD => $keyword],
+            Factor::KEYWORD_HEADERS => [self::HEADERS => $this->getFactor(Factor::HEADERS), self::KEYWORD => $keyword],
             Factor::KEYWORD_DENSITY => [
                 self::TEXT => $this->getFactor(Factor::TEXT),
                 self::LOCALE => $this->locale,
@@ -338,7 +367,7 @@ class Page
      */
     public function setFactor(string $name, $value)
     {
-        $dots = explode(".", $name);
+        $dots = explode('.', $name);
         if (count($dots) > 1) {
             $last = &$this->factors[$dots[0]];
             foreach ($dots as $k => $dot) {
