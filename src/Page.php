@@ -108,10 +108,8 @@ class Page
         $this->setFactor(Factor::LOAD_TIME, $pageLoadFactors['time']);
         $this->content = $pageLoadFactors['content'];
         $this->setFactor(Factor::REDIRECT, $pageLoadFactors['redirect']);
-        if (empty($this->getFactor(Factor::SSL))) {
-            if ($this->getSSLResponseCode() == 200) {
-                $this->setFactor(Factor::SSL, true);
-            }
+        if (empty($this->getFactor(Factor::SSL)) && $this->getSSLResponseCode() == 200) {
+            $this->setFactor(Factor::SSL, true);
         }
     }
 
