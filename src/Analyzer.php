@@ -2,6 +2,8 @@
 
 namespace SeoAnalyzer;
 
+use InvalidArgumentException;
+use ReflectionException;
 use SeoAnalyzer\HttpClient\Client;
 use SeoAnalyzer\HttpClient\ClientInterface;
 use SeoAnalyzer\HttpClient\Exception\HttpException;
@@ -54,8 +56,7 @@ class Analyzer
      * @param string|null $keyword
      * @param string|null $locale
      * @return array
-     * @throws HttpException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function analyzeUrl(string $url, string $keyword = null, string $locale = null): array
     {
@@ -75,8 +76,7 @@ class Analyzer
      * @param string $filename
      * @param string|null $locale
      * @return array
-     * @throws HttpException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function analyzeFile(string $filename, string $locale = null): array
     {
@@ -89,13 +89,12 @@ class Analyzer
      * Starts analysis of a Page.
      *
      * @return array
-     * @throws HttpException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function analyze()
     {
         if (empty($this->page)) {
-            throw new \InvalidArgumentException('No Page to analyze');
+            throw new InvalidArgumentException('No Page to analyze');
         }
         $translator = $this->getTranslator($this->locale);
         $results = [];
@@ -122,8 +121,7 @@ class Analyzer
      * Returns available metrics list for a Page
      *
      * @return array
-     * @throws HttpException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getMetrics(): array
     {
@@ -134,7 +132,7 @@ class Analyzer
      * Returns file related metrics.
      *
      * @return array
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getFilesMetrics(): array
     {

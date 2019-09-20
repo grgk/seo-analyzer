@@ -1,8 +1,9 @@
 <?php
 namespace Tests\TestCase;
 
+use InvalidArgumentException;
+use ReflectionException;
 use SeoAnalyzer\Analyzer;
-use SeoAnalyzer\Cache;
 use SeoAnalyzer\HttpClient\Exception\HttpException;
 use SeoAnalyzer\Metric\AbstractMetric;
 use SeoAnalyzer\Page;
@@ -12,6 +13,7 @@ class AnalyzerTest extends TestCase
 {
     /**
      * @throws HttpException
+     * @throws ReflectionException
      */
     public function testAnalyzeUrlPass()
     {
@@ -30,6 +32,7 @@ class AnalyzerTest extends TestCase
 
     /**
      * @throws HttpException
+     * @throws ReflectionException
      */
     public function testAnalyzeUrlPassWithKeywordTranslated()
     {
@@ -43,6 +46,7 @@ class AnalyzerTest extends TestCase
 
     /**
      * @throws HttpException
+     * @throws ReflectionException
      */
     public function testAnalyzeUrlWithKeywordPass()
     {
@@ -60,7 +64,6 @@ class AnalyzerTest extends TestCase
 
     /**
      * @expectedException \SeoAnalyzer\HttpClient\Exception\HttpException
-     *
      */
     public function testAnalyzeUrlFailOnInvalidUrl()
     {
@@ -69,6 +72,7 @@ class AnalyzerTest extends TestCase
 
     /**
      * @throws HttpException
+     * @throws ReflectionException
      */
     public function testAnalyzeFilePass()
     {
@@ -86,6 +90,7 @@ class AnalyzerTest extends TestCase
 
     /**
      * @throws HttpException
+     * @throws ReflectionException
      */
     public function testAnalyzePass()
     {
@@ -103,7 +108,10 @@ class AnalyzerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException No
+     * @expectedException InvalidArgumentException
+     *
+     * @throws ReflectionException
+     * @throws HttpException
      */
     public function testAnalyzeFailOnNoPage()
     {
@@ -113,6 +121,7 @@ class AnalyzerTest extends TestCase
 
     /**
      * @throws HttpException
+     * @throws ReflectionException
      */
     public function testAnalyzePassInEnglishAsDefault()
     {
@@ -125,6 +134,7 @@ class AnalyzerTest extends TestCase
 
     /**
      * @throws HttpException
+     * @throws ReflectionException
      */
     public function testAnalyzePassInPolish()
     {
@@ -138,6 +148,7 @@ class AnalyzerTest extends TestCase
 
     /**
      * @throws HttpException
+     * @throws ReflectionException
      */
     public function testAnalyzePassOnEmptyPageContent()
     {
@@ -156,6 +167,7 @@ class AnalyzerTest extends TestCase
 
     /**
      * @throws HttpException
+     * @throws ReflectionException
      */
     public function testAnalyzePassOnInvalidHtml()
     {
@@ -174,6 +186,7 @@ class AnalyzerTest extends TestCase
 
     /**
      * @throws HttpException
+     * @throws ReflectionException
      */
     public function testGetMetricsPass()
     {
