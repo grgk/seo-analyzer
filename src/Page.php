@@ -382,7 +382,7 @@ class Page
     protected function setArrayByDot(array &$array, string $path, $val)
     {
         $loc = &$array;
-        foreach(explode('.', $path) as $step) {
+        foreach (explode('.', $path) as $step) {
             $loc = &$loc[$step];
         }
         return $loc = $val;
