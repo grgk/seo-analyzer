@@ -78,8 +78,8 @@ class Parser
         if ($this->getDomElements('img')->length > 0) {
             foreach ($this->getDomElements('img') as $img) {
                 $alts[] = [
-                    trim($img->getAttribute('src')),
-                    trim($img->getAttribute('alt'))
+                    'src' => trim($img->getAttribute('src')),
+                    'alt' => trim($img->getAttribute('alt'))
                 ];
             }
         }
