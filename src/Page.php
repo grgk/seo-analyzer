@@ -47,7 +47,7 @@ class Page
     /**
      * @var array Web page factors values
      */
-    public $factors;
+    public $factors = [];
 
     /**
      * @var ClientInterface
@@ -290,7 +290,7 @@ class Page
     }
 
     /**
-     * Sets up page content factors keyword related .
+     * Sets up page content factors keyword related.
      *
      * @param string $keyword
      */
@@ -399,20 +399,29 @@ class Page
      */
     public function setFactor(string $name, $value)
     {
-        $dots = explode('.', $name);
-        if (count($dots) > 1) {
-            $last = &$this->factors[$dots[0]];
-            foreach ($dots as $k => $dot) {
-                if ($k == 0) {
-                    continue;
-                }
-                $last = &$last[$dot];
-            }
-            $last = $value;
+        if (count(explode('.', $name)) > 1) {
+            $this->setArrayByDot($this->factors, $name, $value);
         } else {
             $this->factors[$name] = $value;
         }
         return $this->factors;
+    }
+
+    /**
+     * Sets array values using string with dot notation.
+     *
+     * @param array $array Array to be updated
+     * @param string $path Dot notated string
+     * @param mixed $val Value to be set in array
+     * @return array
+     */
+    protected function setArrayByDot(array &$array, string $path, $val)
+    {
+        $loc = &$array;
+        foreach (explode('.', $path) as $step) {
+            $loc = &$loc[$step];
+        }
+        return $loc = $val;
     }
 
     /**

@@ -9,6 +9,7 @@
  */
 namespace Tests;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase as PhpUnitTestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -26,7 +27,7 @@ abstract class TestCase extends PhpUnitTestCase
 
     /**
      * @param string|null $response Response body content to be returned
-     * @return \PHPUnit\Framework\MockObject\MockObject|ClientInterface
+     * @return MockObject|ClientInterface
      */
     public function getClientMock(string $response = null)
     {
