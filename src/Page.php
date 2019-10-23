@@ -7,6 +7,8 @@ use SeoAnalyzer\HttpClient\ClientInterface;
 use SeoAnalyzer\HttpClient\Exception\HttpException;
 use SeoAnalyzer\Metric\MetricFactory;
 use ReflectionException;
+use SeoAnalyzer\Parser\Parser;
+use SeoAnalyzer\Parser\ParserInterface;
 
 class Page
 {
@@ -53,17 +55,31 @@ class Page
     public $client;
 
     /**
+     * @var ParserInterface
+     */
+    public $parser;
+
+    /**
      * Page constructor.
      *
      * @param string|null $url
      * @param string|null $locale
      * @param ClientInterface|null $client
+     * @param ParserInterface|null $parser
      */
-    public function __construct(string $url = null, string $locale = null, ClientInterface $client = null)
-    {
+    public function __construct(
+        string $url = null,
+        string $locale = null,
+        ClientInterface $client = null,
+        ParserInterface $parser = null
+    ) {
         $this->client = $client;
         if (empty($client)) {
             $this->client = new Client();
+        }
+        $this->parser = $parser;
+        if (empty($parser)) {
+            $this->parser = new Parser();
         }
         if (!empty($url)) {
             $this->url = $this->setUpUrl($url);
@@ -72,6 +88,26 @@ class Page
         if (!empty($locale)) {
             $this->locale = $locale;
         }
+    }
+
+    /**
+     * Sets custom Http Client.
+     *
+     * @param ClientInterface $client
+     */
+    public function setClient(ClientInterface $client): void
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * Sets custom Html Parser.
+     *
+     * @param ParserInterface $parser
+     */
+    public function setParser(ParserInterface $parser): void
+    {
+        $this->parser = $parser;
     }
 
     /**
@@ -180,13 +216,16 @@ class Page
      */
     public function parse()
     {
-        $parser = new Parser($this->content);
+        if (empty($this->content)) {
+            $this->getContent();
+        }
+        $this->parser->setContent($this->content);
         $this->setFactors([
-            Factor::META_META => $parser->getMeta(),
-            Factor::HEADERS => $parser->getHeaders(),
-            Factor::META_TITLE => $parser->getTitle(),
-            Factor::TEXT => $parser->getText(),
-            Factor::ALTS => $parser->getAlts()
+            Factor::META_META => $this->parser->getMeta(),
+            Factor::HEADERS => $this->parser->getHeaders(),
+            Factor::META_TITLE => $this->parser->getTitle(),
+            Factor::TEXT => $this->parser->getText(),
+            Factor::ALTS => $this->parser->getAlts()
         ]);
     }
 
@@ -194,7 +233,6 @@ class Page
      * Returns page metrics.
      *
      * @return array
-     * @throws HttpException
      * @throws ReflectionException
      */
     public function getMetrics(): array
@@ -208,7 +246,6 @@ class Page
      * @param array $config
      * @return array
      * @throws ReflectionException
-     * @throws HttpException
      */
     public function setMetrics(array $config)
     {
@@ -218,9 +255,6 @@ class Page
 
     private function initializeFactors()
     {
-        if (empty($this->content)) {
-            $this->getContent();
-        }
         if (empty($this->dom)) {
             $this->parse();
         }
@@ -335,7 +369,7 @@ class Page
      *
      * @param array $config Metrics config
      * @return array
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function setUpMetrics(array $config)
     {

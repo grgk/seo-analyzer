@@ -1,15 +1,11 @@
 <?php
 namespace Tests\TestCase;
 
-use SeoAnalyzer\Cache;
 use SeoAnalyzer\Page;
 use Tests\TestCase;
 
 class PageTest extends TestCase
 {
-    /**
-     * @throws \SeoAnalyzer\HttpClient\Exception\HttpException
-     */
     public function testConstructor()
     {
         $url = 'https://www.example.org';
@@ -22,7 +18,7 @@ class PageTest extends TestCase
     }
 
     /**
-     * @throws \SeoAnalyzer\HttpClient\Exception\HttpException
+     * @throws \ReflectionException
      */
     public function testGetMetricsPassWithUrl()
     {
