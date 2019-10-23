@@ -1,6 +1,7 @@
 <?php
 namespace Tests\TestCase\Metric;
 
+use ReflectionException;
 use SeoAnalyzer\Analyzer;
 use SeoAnalyzer\Metric\MetricFactory;
 use Symfony\Component\Translation\Translator;
@@ -25,6 +26,7 @@ class MetricsTest extends TestCase
      * @param mixed $input
      * @param array $expected
      * @dataProvider metricsDataProvider
+     * @throws ReflectionException
      */
     public function testAnalyzePass(string $metricKey, $input, array $expected)
     {

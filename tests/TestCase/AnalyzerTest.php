@@ -1,10 +1,10 @@
 <?php
+
 namespace Tests\TestCase;
 
-use InvalidArgumentException;
-use ReflectionException;
 use SeoAnalyzer\Analyzer;
 use SeoAnalyzer\HttpClient\Exception\HttpException;
+use ReflectionException;
 use SeoAnalyzer\Metric\AbstractMetric;
 use SeoAnalyzer\Page;
 use Tests\TestCase;
@@ -64,6 +64,8 @@ class AnalyzerTest extends TestCase
 
     /**
      * @expectedException \SeoAnalyzer\HttpClient\Exception\HttpException
+     *
+     * @throws ReflectionException
      */
     public function testAnalyzeUrlFailOnInvalidUrl()
     {
@@ -108,10 +110,7 @@ class AnalyzerTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
-     * @throws ReflectionException
-     * @throws HttpException
+     * @expectedException \InvalidArgumentException No
      */
     public function testAnalyzeFailOnNoPage()
     {
