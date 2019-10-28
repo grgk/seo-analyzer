@@ -24,22 +24,36 @@ class HeadersKeywordDensityMetric extends AbstractKeywordDensityMetric
      *
      * @return array
      */
-    protected function getHeadersOverusedWords()
+    protected function getHeadersOverusedWords(): array
     {
-        $keywords = $overusedWords = [];
+        $this->value = $this->getHeadersKeywords();
+        $overusedWords = [];
+        if (!empty($this->value)) {
+            foreach ($this->value as $keywords) {
+                $overusedWords = array_merge($overusedWords, $this->getOverusedKeywords($keywords, 35, 3));
+            }
+        }
+        return $overusedWords;
+    }
+
+    /**
+     * Returns headers keywords.
+     *
+     * @param int $maxPhaseWords
+     * @return array
+     */
+    protected function getHeadersKeywords(int $maxPhaseWords = 3): array
+    {
+        $keywords = [];
         if (!empty($this->value['headers'])) {
             foreach ($this->value['headers'] as $header => $headersContent) {
                 $keywords[$header] = $this->analyseKeywords(
                     implode(" ", $headersContent),
                     $this->value['stop_words'],
-                    3
+                    $maxPhaseWords
                 );
-                if (!empty($overUsed = $this->getOverusedKeywords($keywords[$header], 35, 3))) {
-                    $overusedWords = array_merge($overusedWords, $overUsed);
-                }
             }
-            $this->value = $keywords;
         }
-        return $overusedWords;
+        return $keywords;
     }
 }
