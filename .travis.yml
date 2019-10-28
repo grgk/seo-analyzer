@@ -7,6 +7,10 @@ php:
   - 7.2
   - 7.3
 
+env:
+  global:
+    - CC_TEST_REPORTER_ID=72d58db2fba1e2cd7d118385aae8bb5b84cbf6b51fe263afc1c1ff47711ffd7a
+
 before_script:
   - composer install
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -18,7 +22,7 @@ addons:
     organization: "grgk-github"
 
 script:
-  - vendor/bin/phpunit --coverage-clover build/logs/phpunit/clover.xml --log-junit build/logs/phpunit/junit.xml --coverage-xml build/logs/phpunit/coverage/xml --coverage-html build/logs/phpunit/coverage/html
+  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml --log-junit build/logs/junit.xml --coverage-xml build/logs/coverage/xml --coverage-html build/logs/coverage/html
   - sonar-scanner
 
 after_script:

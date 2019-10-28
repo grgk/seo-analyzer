@@ -16,7 +16,7 @@ use SeoAnalyzer\Parser\ExampleCustomParser;
 try {
     $page = new Page('https://www.msn.com/pl-pl');
     $parser = new ExampleCustomParser();
-    $page->setParser($parser);
+    $page->parser = $parser;
     $analyzer = new Analyzer($page);
     $analyzer->metrics = $page->setMetrics([Factor::ALTS]);
     $results = $analyzer->analyze();

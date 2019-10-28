@@ -91,26 +91,6 @@ class Page
     }
 
     /**
-     * Sets custom Http Client.
-     *
-     * @param ClientInterface $client
-     */
-    public function setClient(ClientInterface $client): void
-    {
-        $this->client = $client;
-    }
-
-    /**
-     * Sets custom Html Parser.
-     *
-     * @param ParserInterface $parser
-     */
-    public function setParser(ParserInterface $parser): void
-    {
-        $this->parser = $parser;
-    }
-
-    /**
      * Verifies URL and sets up some basic metrics.
      *
      * @param string $url
@@ -243,6 +223,7 @@ class Page
 
     /**
      * Sets up and returns page metrics based on configuration specified.
+     *
      * @param array $config
      * @return array
      * @throws ReflectionException
@@ -371,21 +352,19 @@ class Page
      * @return array
      * @throws ReflectionException
      */
-    public function setUpMetrics(array $config)
+    public function setUpMetrics(array $config = [])
     {
         $metrics = [];
-        if (!empty($config)) {
-            foreach ($config as $factor) {
-                $metric = $factor;
-                if (is_array($factor)) {
-                    $metric = current($factor);
-                    $factor = key($factor);
-                }
-                $metrics['page_' . str_replace('.', '_', $metric)] = MetricFactory::get(
-                    'page.' . $metric,
-                    $this->getFactor($factor)
-                );
+        foreach ($config as $factor) {
+            $metric = $factor;
+            if (is_array($factor)) {
+                $metric = current($factor);
+                $factor = key($factor);
             }
+            $metrics['page_' . str_replace('.', '_', $metric)] = MetricFactory::get(
+                'page.' . $metric,
+                $this->getFactor($factor)
+            );
         }
         return $metrics;
     }

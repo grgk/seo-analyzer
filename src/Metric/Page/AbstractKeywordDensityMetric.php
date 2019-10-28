@@ -59,21 +59,39 @@ abstract class AbstractKeywordDensityMetric extends AbstractMetric
     {
         $words = $this->getWords($text, $stopWords);
         $keywords = $this->getKeywords($words, $maxPhraseWords);
-        for ($i = 1; $i <= $maxPhraseWords; $i++) {
-            if (!empty($keywords[$i])) {
-                $keywords[$i] = array_count_values($keywords[$i]);
-                arsort($keywords[$i]);
-                $keywords[$i] = array_filter($keywords[$i], function ($count) use ($minCount) {
-                    return $count >= $minCount;
-                });
-                $keywordsCount = array_sum($keywords[$i]);
-                foreach ($keywords[$i] as $keyword => $count) {
-                    $keywords[$i][$keyword] = round($count / $keywordsCount * 100);
-                }
-                $keywords[$i] = array_slice($keywords[$i], 0, 10);
+        $keywordsPercentages = [];
+        for ($phraseWordCount = 1; $phraseWordCount <= $maxPhraseWords; $phraseWordCount++) {
+            if (!empty($keywords[$phraseWordCount])) {
+                $keywordsPercentages[$phraseWordCount] = $this->calculateKeywordsPercentage(
+                    $keywords[$phraseWordCount],
+                    $minCount,
+                    10
+                );
             }
         }
-        return $keywords;
+        return $keywordsPercentages;
+    }
+
+    /**
+     * Calculates the percentage of keywords frequency.
+     *
+     * @param array $keywords
+     * @param int $minCount
+     * @param int $limit
+     * @return array
+     */
+    protected function calculateKeywordsPercentage(array $keywords, int $minCount = 0, int $limit = 10): array
+    {
+        $keywords = array_count_values($keywords);
+        arsort($keywords);
+        $keywords = array_filter($keywords, function ($count) use ($minCount) {
+            return $count >= $minCount;
+        });
+        $keywordsCount = array_sum($keywords);
+        foreach ($keywords as $keyword => $count) {
+            $keywords[$keyword] = round($count / $keywordsCount * 100);
+        }
+        return array_slice($keywords, 0, $limit);
     }
 
     /**
