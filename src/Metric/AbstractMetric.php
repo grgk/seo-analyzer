@@ -3,6 +3,7 @@
 namespace SeoAnalyzer\Metric;
 
 use ReflectionClass;
+use ReflectionException;
 
 abstract class AbstractMetric implements MetricInterface
 {
@@ -36,7 +37,7 @@ abstract class AbstractMetric implements MetricInterface
 
     /**
      * @param mixed $inputData Input data to compute metric value
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct($inputData)
     {
@@ -50,12 +51,14 @@ abstract class AbstractMetric implements MetricInterface
      * Sets up the conditions for results configured.
      *
      * @param array $conditions
+     * @return bool
      */
-    protected function setUpResultsConditions(array $conditions)
+    protected function setUpResultsConditions(array $conditions): bool
     {
         foreach ($conditions as $key => $condition) {
             $this->results[$key]['condition'] = $condition;
         }
+        return true;
     }
 
     /**

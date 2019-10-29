@@ -47,17 +47,30 @@ class MetaMetric extends AbstractMetric
     /**
      * @inheritDoc
      */
-    protected function setUpResultsConditions(array $conditions = [])
+    protected function setUpResultsConditions(array $conditions = []): bool
     {
-        $this->results['no_tags']['condition'] = empty($this->value);
-        if (!empty($this->value)) {
-            $this->results['title_length']['condition'] = isset($this->value['title'])
-                && (strlen($this->value['title']) < 10 || strlen($this->value['title']) > 60);
-            $this->results['missing_description']['condition'] = isset($this->value['meta'])
-                && empty($this->value['meta'][self::DESCRIPTION]);
-            $this->results['description_length']['condition'] = isset($this->value['meta'][self::DESCRIPTION])
-                && (strlen($this->value['meta'][self::DESCRIPTION]) < 30
-                || strlen($this->value['meta'][self::DESCRIPTION]) > 120);
+        $conditions = ['no_tags' => empty($this->value)];
+        if (empty($this->value)) {
+            return parent::setUpResultsConditions($conditions);
         }
+        $conditions = array_merge($conditions, [
+            'title_length' => $this->checkTitleTag(),
+            'missing_description' => isset($this->value['meta']) && empty($this->value['meta'][self::DESCRIPTION]),
+            'description_length' => $this->checkMetaDescriptionTag()
+        ]);
+        return parent::setUpResultsConditions($conditions);
+    }
+
+    private function checkTitleTag($minLength = 10, $maxLength = 60)
+    {
+        return isset($this->value['title'])
+            && (strlen($this->value['title']) < $minLength || strlen($this->value['title']) > $maxLength);
+    }
+
+    private function checkMetaDescriptionTag($minLength = 30, $maxLength = 120)
+    {
+        return isset($this->value['meta'][self::DESCRIPTION])
+            && (strlen($this->value['meta'][self::DESCRIPTION]) < $minLength
+                || strlen($this->value['meta'][self::DESCRIPTION]) > $maxLength);
     }
 }

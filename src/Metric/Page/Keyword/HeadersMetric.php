@@ -13,7 +13,7 @@ class HeadersMetric extends AbstractMetric
             'impact' => 7,
             'message' => 'The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO'
         ],
-        'no_keyword_h2s' => [
+        'no_keyword_h2' => [
             'impact' => 3,
             'message' => 'The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO'
         ]
@@ -36,23 +36,32 @@ class HeadersMetric extends AbstractMetric
     /**
      * @inheritDoc
      */
-    protected function setUpResultsConditions(array $conditions = [])
+    protected function setUpResultsConditions(array $conditions = []): bool
     {
         $conditions = [
-            'no_keyword_h1' => empty($this->value[self::HEADERS]['h1'][0])
-                || stripos($this->value[self::HEADERS]['h1'][0], $this->value['keyword']) === false,
-            'no_keyword_h2s' => function ($value) {
-                $keywordNotFound = true;
-                if (!empty($value[self::HEADERS]['h2'])) {
-                    foreach ($value[self::HEADERS]['h2'] as $h2) {
-                        if (stripos($h2, $value['keyword']) !== false) {
-                            $keywordNotFound = false;
-                        }
-                    }
-                }
-                return $keywordNotFound;
-            }
+            'no_keyword_h1' => $this->isKeywordMissingInHeaders(),
+            'no_keyword_h2' => $this->isKeywordMissingInHeaders('h2')
         ];
-        parent::setUpResultsConditions($conditions);
+        return parent::setUpResultsConditions($conditions);
+    }
+
+    /**
+     * Checks if keyword is not present in headers of specified type.
+     *
+     * @param string $headerType
+     * @return bool
+     */
+    private function isKeywordMissingInHeaders(string $headerType = 'h1'): bool
+    {
+        if (empty($this->value[self::HEADERS]) || empty($this->value[self::HEADERS][$headerType])) {
+            return true;
+        }
+        $keywordNotFound = true;
+        foreach ($this->value[self::HEADERS][$headerType] as $headerContent) {
+            if (stripos($headerContent, $this->value['keyword']) !== false) {
+                $keywordNotFound = false;
+            }
+        }
+        return $keywordNotFound;
     }
 }
