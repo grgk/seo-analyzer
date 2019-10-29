@@ -63,16 +63,30 @@ class HeadersMetric extends AbstractMetric
      */
     protected function setUpResultsConditions()
     {
-        $this->results['no_headers']['condition'] = empty($this->value);
+        $conditions = [
+            'no_headers' => empty($this->value)
+        ];
         if (!empty($this->value)) {
-            $this->results['no_H1']['condition'] = empty($this->value['h1']) || empty($this->value['h1'][0]);
+            $conditions = array_merge($conditions, [
+                'no_H1' => empty($this->value['h1']) || empty($this->value['h1'][0]),
+                'no_H2' => empty($this->value['h2']) || empty($this->value['h2'][0]),
+                'too_many_H2' => !empty($this->value['h2']) && count($this->value['h2']) > 5,
+                'no_H3' => empty($this->value['h3']) || empty($this->value['h3'][0])
+            ]);
             if (!empty($this->value['h1'])) {
-                $this->results['multi_H1']['condition'] = count($this->value['h1']) > 1;
-                $this->results['too_long_H1']['condition'] = strlen($this->value['h1'][0]) > 35;
+                $conditions = array_merge($conditions, [
+                    'multi_H1' => count($this->value['h1']) > 1,
+                    'too_long_H1' => strlen($this->value['h1'][0]) > 35
+                ]);
             }
-            $this->results['no_H2']['condition'] = empty($this->value['h2']) || empty($this->value['h2'][0]);
-            $this->results['too_many_H2']['condition'] = !empty($this->value['h2']) && count($this->value['h2']) > 5;
-            $this->results['no_H3']['condition'] = empty($this->value['h3']) || empty($this->value['h3'][0]);
+        }
+        $this->setItUp($conditions);
+    }
+
+    protected function setItUp($conditions)
+    {
+        foreach ($conditions as $key => $condition) {
+            $this->results[$key]['condition'] = $condition;
         }
     }
 }
