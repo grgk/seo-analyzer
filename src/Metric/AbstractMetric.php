@@ -47,6 +47,18 @@ abstract class AbstractMetric implements MetricInterface
     }
 
     /**
+     * Sets up the conditions for results configured.
+     *
+     * @param array $conditions
+     */
+    protected function setUpResultsConditions(array $conditions)
+    {
+        foreach ($conditions as $key => $condition) {
+            $this->results[$key]['condition'] = $condition;
+        }
+    }
+
+    /**
      * Checks if any of the possible defined results occurred.
      *
      * @param string $defaultMessage Default message to return

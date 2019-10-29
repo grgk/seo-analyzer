@@ -45,9 +45,9 @@ class MetaMetric extends AbstractMetric
     }
 
     /**
-     * Sets up the metric conditions for the configured results.
+     * @inheritDoc
      */
-    protected function setUpResultsConditions()
+    protected function setUpResultsConditions(array $conditions = [])
     {
         $this->results['no_tags']['condition'] = empty($this->value);
         if (!empty($this->value)) {

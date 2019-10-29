@@ -34,23 +34,25 @@ class HeadersMetric extends AbstractMetric
     }
 
     /**
-     * Sets up the metric conditions for the configured results.
+     * @inheritDoc
      */
-    protected function setUpResultsConditions()
+    protected function setUpResultsConditions(array $conditions = [])
     {
-        $this->results['no_keyword_h1']['condition'] = empty($this->value[self::HEADERS]['h1'][0])
-            || stripos($this->value[self::HEADERS]['h1'][0], $this->value['keyword']) === false;
-
-        $this->results['no_keyword_h2s']['condition'] = function ($value) {
-            $keywordNotFound = true;
-            if (!empty($value[self::HEADERS]['h2'])) {
-                foreach ($value[self::HEADERS]['h2'] as $h2) {
-                    if (stripos($h2, $value['keyword']) !== false) {
-                        $keywordNotFound = false;
+        $conditions = [
+            'no_keyword_h1' => empty($this->value[self::HEADERS]['h1'][0])
+                || stripos($this->value[self::HEADERS]['h1'][0], $this->value['keyword']) === false,
+            'no_keyword_h2s' => function ($value) {
+                $keywordNotFound = true;
+                if (!empty($value[self::HEADERS]['h2'])) {
+                    foreach ($value[self::HEADERS]['h2'] as $h2) {
+                        if (stripos($h2, $value['keyword']) !== false) {
+                            $keywordNotFound = false;
+                        }
                     }
                 }
+                return $keywordNotFound;
             }
-            return $keywordNotFound;
-        };
+        ];
+        parent::setUpResultsConditions($conditions);
     }
 }

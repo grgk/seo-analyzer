@@ -59,9 +59,9 @@ class HeadersMetric extends AbstractMetric
     }
 
     /**
-     * Sets up the metric conditions for the configured results.
+     * @inheritDoc
      */
-    protected function setUpResultsConditions()
+    protected function setUpResultsConditions(array $conditions = [])
     {
         $conditions = [
             'no_headers' => empty($this->value)
@@ -80,13 +80,6 @@ class HeadersMetric extends AbstractMetric
                 ]);
             }
         }
-        $this->setItUp($conditions);
-    }
-
-    protected function setItUp($conditions)
-    {
-        foreach ($conditions as $key => $condition) {
-            $this->results[$key]['condition'] = $condition;
-        }
+        parent::setUpResultsConditions($conditions);
     }
 }
