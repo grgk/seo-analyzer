@@ -5,6 +5,7 @@ namespace SeoAnalyzer;
 use SeoAnalyzer\HttpClient\Client;
 use SeoAnalyzer\HttpClient\ClientInterface;
 use SeoAnalyzer\HttpClient\Exception\HttpException;
+use SeoAnalyzer\Metric\KeywordBasedMetricInterface;
 use SeoAnalyzer\Metric\MetricFactory;
 use ReflectionException;
 use SeoAnalyzer\Parser\Parser;
@@ -23,6 +24,11 @@ class Page
      * @var string URL of web page
      */
     public $url;
+
+    /**
+     * @var array Configuration
+     */
+    public $config;
 
     /**
      * @var string Page locale
@@ -63,30 +69,28 @@ class Page
      * Page constructor.
      *
      * @param string|null $url
-     * @param string|null $locale
+     * @param string|array $config Due to the backwards compatibility: locale if string, config if array
      * @param ClientInterface|null $client
      * @param ParserInterface|null $parser
      */
     public function __construct(
         string $url = null,
-        string $locale = null,
+        $config = [],
         ClientInterface $client = null,
         ParserInterface $parser = null
     ) {
-        $this->client = $client;
-        if (empty($client)) {
-            $this->client = new Client();
+        $this->client = $client ?? new Client();
+        $this->parser = $parser ?? new Parser();
+        if (is_string($config)) { // Due to the backwards compatibility
+            $config = ['locale' => $config];
         }
-        $this->parser = $parser;
-        if (empty($parser)) {
-            $this->parser = new Parser();
+        if (is_null($config)) { // Due to the backwards compatibility
+            $config = ['locale' => $this->locale];
         }
+        $this->setConfig($config);
         if (!empty($url)) {
             $this->url = $this->setUpUrl($url);
             $this->getContent();
-        }
-        if (!empty($locale)) {
-            $this->locale = $locale;
         }
     }
 
@@ -116,6 +120,22 @@ class Page
     }
 
     /**
+     * Sets configuration.
+     *
+     * @param array $config
+     */
+    public function setConfig(array $config)
+    {
+        $this->config = require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config/default.php';
+        foreach ($this->config as $configItemKey => $configItemValue) {
+            if (isset($config[$configItemKey])) {
+                $this->config[$configItemKey] = $configItemValue;
+            }
+        }
+    }
+
+
+    /**
      * Downloads page content from URL specified and sets up some base metrics.
      */
     public function getContent()
@@ -140,7 +160,7 @@ class Page
         $cache = new Cache();
         return $cache->remember('page_content_'. base64_encode($this->url), function () {
             $starTime = microtime(true);
-            $response = $this->client->get($this->url, $this->getHttpClientOptions());
+            $response = $this->client->get($this->url);
             $loadTime = number_format((microtime(true) - $starTime), 4);
             $redirect = null;
             if (!empty($redirects = $response->getHeader('X-Guzzle-Redirect-History'))) {
@@ -177,21 +197,6 @@ class Page
     }
 
     /**
-     * Returns http client options used for making requests.
-     *
-     * @return array
-     */
-    protected function getHttpClientOptions()
-    {
-        return [
-            'allow_redirects' => ['track_redirects' => true],
-            self::HEADERS => [
-                'User-Agent' => 'grgk-seo-analyzer/1.0'
-            ]
-        ];
-    }
-
-    /**
      * Parses page's html content setting up related metrics.
      */
     public function parse()
@@ -218,7 +223,7 @@ class Page
     public function getMetrics(): array
     {
         $this->initializeFactors();
-        return $this->setUpMetrics($this->getMetricsConfig());
+        return $this->setUpMetrics($this->config['factors']);
     }
 
     /**
@@ -313,39 +318,6 @@ class Page
     }
 
     /**
-     * Return metrics configuration.
-     *
-     * @return array
-     */
-    public function getMetricsConfig()
-    {
-        $config = [
-            Factor::SSL,
-            Factor::REDIRECT,
-            Factor::CONTENT_SIZE,
-            Factor::META,
-            Factor::HEADERS,
-            Factor::CONTENT_RATIO,
-            [Factor::DENSITY_PAGE => 'keywordDensity'],
-            [Factor::DENSITY_HEADERS => 'headersKeywordDensity'],
-            Factor::ALTS,
-            Factor::URL_LENGTH,
-            Factor::LOAD_TIME
-        ];
-        if (!empty($this->keyword)) {
-            $config = array_merge($config, [
-                [Factor::KEYWORD_URL => self::KEYWORD],
-                [Factor::KEYWORD_PATH => self::KEYWORD],
-                [Factor::KEYWORD_TITLE => self::KEYWORD],
-                [Factor::KEYWORD_DESCRIPTION => self::KEYWORD],
-                Factor::KEYWORD_HEADERS,
-                [Factor::KEYWORD_DENSITY => 'keywordDensity']
-            ]);
-        }
-        return $config;
-    }
-
-    /**
      * Sets up page metrics.
      *
      * @param array $config Metrics config
@@ -361,10 +333,10 @@ class Page
                 $metric = current($factor);
                 $factor = key($factor);
             }
-            $metrics['page_' . str_replace('.', '_', $metric)] = MetricFactory::get(
-                'page.' . $metric,
-                $this->getFactor($factor)
-            );
+            $metricObject = MetricFactory::get('page.' . $metric, $this->getFactor($factor));
+            if (!$metricObject instanceof KeywordBasedMetricInterface || !empty($this->keyword)) {
+                $metrics['page_' . str_replace('.', '_', $metric)] = $metricObject;
+            }
         }
         return $metrics;
     }

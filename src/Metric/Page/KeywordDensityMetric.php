@@ -2,7 +2,9 @@
 
 namespace SeoAnalyzer\Metric\Page;
 
-class KeywordDensityMetric extends AbstractKeywordDensityMetric
+use SeoAnalyzer\Metric\KeywordBasedMetricInterface;
+
+class KeywordDensityMetric extends AbstractKeywordDensityMetric implements KeywordBasedMetricInterface
 {
     public $description = 'Keyword density in page content';
 

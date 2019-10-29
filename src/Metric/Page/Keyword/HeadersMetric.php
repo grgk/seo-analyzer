@@ -3,8 +3,9 @@
 namespace SeoAnalyzer\Metric\Page\Keyword;
 
 use SeoAnalyzer\Metric\AbstractMetric;
+use SeoAnalyzer\Metric\KeywordBasedMetricInterface;
 
-class HeadersMetric extends AbstractMetric
+class HeadersMetric extends AbstractMetric implements KeywordBasedMetricInterface
 {
     public $description = 'Does the headers contain a key phrase?';
 
