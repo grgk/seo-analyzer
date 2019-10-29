@@ -181,6 +181,16 @@ class MetricsTest extends TestCase
             ],
             [
                 'page.meta',
+                [],
+                [
+                    'class' => '\SeoAnalyzer\Metric\Page\MetaMetric',
+                    'value' => [],
+                    'impact' => 8,
+                    'analysis' => 'Missing page title and description meta tags. You should add the title'
+                ]
+            ],
+            [
+                'page.meta',
                 ['title' => false, 'meta' => false],
                 [
                     'class' => '\SeoAnalyzer\Metric\Page\MetaMetric',

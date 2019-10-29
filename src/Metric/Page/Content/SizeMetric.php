@@ -6,8 +6,6 @@ use SeoAnalyzer\Metric\AbstractMetric;
 
 class SizeMetric extends AbstractMetric
 {
-    protected $results = [];
-
     public $description = 'The size of the page';
 
     public function __construct($inputData)
@@ -42,12 +40,6 @@ class SizeMetric extends AbstractMetric
      */
     public function analyze(): string
     {
-        foreach ($this->results as $result) {
-            if ($result['condition']) {
-                $this->impact = $result['impact'];
-                return $result['message'];
-            }
-        }
-        return 'The size of your page is ok';
+        return $this->checkTheResults('The size of your page is ok');
     }
 }

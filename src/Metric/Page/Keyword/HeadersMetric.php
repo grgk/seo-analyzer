@@ -8,28 +8,49 @@ class HeadersMetric extends AbstractMetric
 {
     public $description = 'Does the headers contain a key phrase?';
 
+    protected $results = [
+        'no_keyword_h1' => [
+            'impact' => 7,
+            'message' => 'The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO'
+        ],
+        'no_keyword_h2s' => [
+            'impact' => 3,
+            'message' => 'The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO'
+        ]
+    ];
+
+    public function __construct($inputData)
+    {
+        parent::__construct($inputData);
+        $this->setUpResultsConditions();
+    }
+
     /**
      * @inheritdoc
      */
     public function analyze(): string
     {
-        if (empty($this->value[self::HEADERS]['h1'][0])
-            || stripos($this->value[self::HEADERS]['h1'][0], $this->value['keyword']) === false) {
-            $this->impact = 7;
-            return 'The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO';
-        }
-        if (!empty($this->value[self::HEADERS]['h2'])) {
-            $anyHasKeyword = false;
-            foreach ($this->value[self::HEADERS]['h2'] as $h2) {
-                if (stripos($h2, $this->value['keyword']) !== false) {
-                    $anyHasKeyword = true;
+        return $this->checkTheResults('Good! The site headers contain the keyword phrase');
+    }
+
+    /**
+     * Sets up the metric conditions for the configured results.
+     */
+    protected function setUpResultsConditions()
+    {
+        $this->results['no_keyword_h1']['condition'] = empty($this->value[self::HEADERS]['h1'][0])
+            || stripos($this->value[self::HEADERS]['h1'][0], $this->value['keyword']) === false;
+
+        $this->results['no_keyword_h2s']['condition'] = function ($value) {
+            $keywordNotFound = true;
+            if (!empty($value[self::HEADERS]['h2'])) {
+                foreach ($value[self::HEADERS]['h2'] as $h2) {
+                    if (stripos($h2, $value['keyword']) !== false) {
+                        $keywordNotFound = false;
+                    }
                 }
             }
-            if ($anyHasKeyword) {
-                return 'Good! The site headers contain the keyword phrase';
-            }
-        }
-        $this->impact = 3;
-        return 'The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO';
+            return $keywordNotFound;
+        };
     }
 }

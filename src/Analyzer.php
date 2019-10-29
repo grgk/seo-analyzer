@@ -8,6 +8,7 @@ use SeoAnalyzer\HttpClient\Client;
 use SeoAnalyzer\HttpClient\ClientInterface;
 use SeoAnalyzer\HttpClient\Exception\HttpException;
 use SeoAnalyzer\Metric\MetricFactory;
+use SeoAnalyzer\Metric\MetricInterface;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 
@@ -26,12 +27,17 @@ class Analyzer
     /**
      * @var array Metrics array
      */
-    public $metrics;
+    public $metrics = [];
 
     /**
      * @var ClientInterface
      */
     public $client;
+
+    /**
+     * @var Translator
+     */
+    public $translator;
 
     /**
      * @param Page|null $page Page to analyze
@@ -96,22 +102,13 @@ class Analyzer
         if (empty($this->page)) {
             throw new InvalidArgumentException('No Page to analyze');
         }
-        $translator = $this->getTranslator($this->locale);
-        $results = [];
         if (empty($this->metrics)) {
             $this->metrics = $this->getMetrics();
         }
-        if (!empty($this->metrics)) {
-            foreach ($this->metrics as $metric) {
-                if ($metric && $analysisResult = $metric->analyze()) {
-                    $results[$metric->name] = [
-                        'analysis' => $translator->trans($analysisResult),
-                        'name' => $metric->name,
-                        'description' => $translator->trans($metric->description),
-                        'value' => $metric->value,
-                        'negative_impact' => $metric->impact,
-                    ];
-                }
+        $results = [];
+        foreach ($this->metrics as $metric) {
+            if ($analysisResult = $metric->analyze()) {
+                $results[$metric->name] = $this->formatResults($metric, $analysisResult);
             }
         }
         return $results;
@@ -189,5 +186,26 @@ class Analyzer
             $translator->addResource('yaml', $localeFilename, $locale);
         }
         return $translator;
+    }
+
+    /**
+     * Formats metric analysis results.
+     *
+     * @param MetricInterface $metric
+     * @param $results
+     * @return array
+     */
+    protected function formatResults(MetricInterface $metric, string $results): array
+    {
+        if (empty($this->translator)) {
+            $this->translator = $this->getTranslator($this->locale);
+        }
+        return [
+            'analysis' => $this->translator->trans($results),
+            'name' => $metric->name,
+            'description' => $this->translator->trans($metric->description),
+            'value' => $metric->value,
+            'negative_impact' => $metric->impact,
+        ];
     }
 }
