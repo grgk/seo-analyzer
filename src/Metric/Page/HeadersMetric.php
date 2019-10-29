@@ -61,7 +61,7 @@ class HeadersMetric extends AbstractMetric
     /**
      * @inheritDoc
      */
-    protected function setUpResultsConditions(array $conditions = [])
+    protected function setUpResultsConditions(array $conditions = []): bool
     {
         $conditions = [
             'no_headers' => empty($this->value)
@@ -80,6 +80,6 @@ class HeadersMetric extends AbstractMetric
                 ]);
             }
         }
-        parent::setUpResultsConditions($conditions);
+        return parent::setUpResultsConditions($conditions);
     }
 }
