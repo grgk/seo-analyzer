@@ -15,7 +15,6 @@ class Cache
 
     public function __construct(string $adapterClass = null, $ttl = 300)
     {
-
         if (empty($adapterClass)) {
             $adapterClass = FilesystemCache::class;
         }

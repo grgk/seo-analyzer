@@ -26,5 +26,4 @@ class ConditionsCallableMetricTest extends TestCase
         $this->assertEquals('Fail test metric output message', $metric->analyze());
         $this->assertEquals($metric->impact, 4);
     }
-
 }
