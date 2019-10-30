@@ -10,37 +10,37 @@ class HeadersMetric extends AbstractMetric
 
     protected $results = [
         'no_headers' => [
-            'impact' => 7,
-            'message' => 'Looks the site has no headers at all.' .
+            self::IMPACT => 7,
+            self::MESSAGE => 'Looks the site has no headers at all.' .
                 ' You should rebuild your page structure as html headers have strong impact on SEO'
         ],
         'no_H1' => [
-            'impact' => 5,
-            'message' => 'There is no H1 header on the site.' .
+            self::IMPACT => 5,
+            self::MESSAGE => 'There is no H1 header on the site.' .
                 ' You should rebuild your page to use main headers as this has strong impact on SEO'
         ],
         'multi_H1' => [
-            'impact' => 3,
-            'message' => 'There are multiple H1 headers on the site.' .
+            self::IMPACT => 3,
+            self::MESSAGE => 'There are multiple H1 headers on the site.' .
                 ' You should use only one main header on the site'
         ],
         'too_long_H1' => [
-            'impact' => 3,
-            'message' => 'The H1 header is too long.' .
+            self::IMPACT => 3,
+            self::MESSAGE => 'The H1 header is too long.' .
                 ' You should consider changing it to something shorter including your main keyword',
         ],
         'no_H2' => [
-            'impact' => 3,
-            'message' => 'There are no H2 headers on the site.' .
+            self::IMPACT => 3,
+            self::MESSAGE => 'There are no H2 headers on the site.' .
                 ' You should consider rebuild your page to use proper headers structure'
         ],
         'too_many_H2' => [
-            'impact' => 1,
-            'message' => 'There are a lot of H2 headers on the site. You should limit number of H2 headers'
+            self::IMPACT => 1,
+            self::MESSAGE => 'There are a lot of H2 headers on the site. You should limit number of H2 headers'
         ],
         'no_H3' => [
-            'impact' => 1,
-            'message' => 'There are no H3 header on the site. Using proper headers structure can improve the SEO'
+            self::IMPACT => 1,
+            self::MESSAGE => 'There are no H3 header on the site. Using proper headers structure can improve the SEO'
         ]
     ];
 

@@ -8,31 +8,35 @@ class SizeMetric extends AbstractMetric
 {
     public $description = 'The size of the page';
 
+    protected $results = [
+        'read_error' => [
+            self::IMPACT => 10,
+            self::MESSAGE => 'Can not read your page content'
+        ],
+        'empty_content' => [
+            self::IMPACT => 10,
+            self::MESSAGE => 'Looks that your site content is empty'
+        ],
+        'very_big' => [
+            self::IMPACT => 3,
+            self::MESSAGE => 'The site is very big. You should consider rebuilding the page to optimise it\'s size'
+        ],
+        'too_big' => [
+            self::IMPACT => 1,
+            self::MESSAGE => 'You should consider some optimisation of the page to decrease it\'s size'
+        ],
+    ];
+
     public function __construct($inputData)
     {
         parent::__construct($inputData);
-        $this->results = [
-            'read_error' => [
-                'condition' => $this->value === false,
-                'impact' => 10,
-                'message' => 'Can not read your page content'
-            ],
-            'empty_content' => [
-                'condition' => $this->value === 0,
-                'impact' => 10,
-                'message' => 'Looks that your site content is empty'
-            ],
-            'very_big' => [
-                'condition' => $this->value > 80000,
-                'impact' => 3,
-                'message' => 'The site is very big. You should consider rebuilding the page to optimise it\'s size'
-            ],
-            'too_big' => [
-                'condition' => $this->value > 30000,
-                'impact' => 1,
-                'message' => 'You should consider some optimisation of the page to decrease it\'s size'
-            ],
+        $conditions = [
+            'read_error' => $this->value === false,
+            'empty_content' => $this->value === 0,
+            'very_big' => $this->value > 80000,
+            'too_big' => $this->value > 30000,
         ];
+        $this->setUpResultsConditions($conditions);
     }
 
     /**

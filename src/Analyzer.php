@@ -173,19 +173,17 @@ class Analyzer
      * Sets up the translator for current locale.
      *
      * @param string $locale
-     * @return Translator
      */
-    public function getTranslator(string $locale): Translator
+    public function setUpTranslator(string $locale)
     {
-        $translator = new Translator($locale);
-        $translator->setFallbackLocales(['en_GB']);
+        $this->translator = new Translator($locale);
+        $this->translator->setFallbackLocales(['en_GB']);
         $yamlLoader = new YamlFileLoader();
-        $translator->addLoader('yaml', $yamlLoader);
+        $this->translator->addLoader('yaml', $yamlLoader);
         $localeFilename = dirname(__DIR__) . '/locale/' . $locale . '.yml';
         if (is_file($localeFilename)) {
-            $translator->addResource('yaml', $localeFilename, $locale);
+            $this->translator->addResource('yaml', $localeFilename, $locale);
         }
-        return $translator;
     }
 
     /**
@@ -198,7 +196,7 @@ class Analyzer
     protected function formatResults(MetricInterface $metric, string $results): array
     {
         if (empty($this->translator)) {
-            $this->translator = $this->getTranslator($this->locale);
+            $this->setUpTranslator($this->locale);
         }
         return [
             'analysis' => $this->translator->trans($results),

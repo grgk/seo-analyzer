@@ -82,10 +82,10 @@ class Page
         $this->client = $client ?? new Client();
         $this->parser = $parser ?? new Parser();
         if (is_string($config)) { // Due to the backwards compatibility
-            $config = ['locale' => $config];
+            $config = [self::LOCALE => $config];
         }
         if (is_null($config)) { // Due to the backwards compatibility
-            $config = ['locale' => $this->locale];
+            $config = [self::LOCALE => $this->locale];
         }
         $this->setConfig($config);
         if (!empty($url)) {

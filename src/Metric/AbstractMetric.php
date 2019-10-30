@@ -9,6 +9,8 @@ abstract class AbstractMetric implements MetricInterface
 {
     const HEADERS = 'headers';
     const DESCRIPTION = 'description';
+    const IMPACT = 'impact';
+    const MESSAGE = 'message';
 
     /**
      * @var array Possible results configuration.

@@ -18,7 +18,8 @@ class MetricsTest extends TestCase
     {
         parent::setUp();
         $analyzer = new Analyzer();
-        $this->translator = $analyzer->getTranslator('pl_PL');
+        $analyzer->setUpTranslator('pl_PL');
+        $this->translator = $analyzer->translator;
     }
 
     /**

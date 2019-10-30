@@ -11,12 +11,12 @@ class HeadersMetric extends AbstractMetric implements KeywordBasedMetricInterfac
 
     protected $results = [
         'no_keyword_h1' => [
-            'impact' => 7,
-            'message' => 'The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO'
+            self::IMPACT => 7,
+            self::MESSAGE => 'The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO'
         ],
         'no_keyword_h2' => [
-            'impact' => 3,
-            'message' => 'The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO'
+            self::IMPACT => 3,
+            self::MESSAGE => 'The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO'
         ]
     ];
 

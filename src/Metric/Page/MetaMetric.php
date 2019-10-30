@@ -2,6 +2,7 @@
 
 namespace SeoAnalyzer\Metric\Page;
 
+use SeoAnalyzer\Factor;
 use SeoAnalyzer\Metric\AbstractMetric;
 
 class MetaMetric extends AbstractMetric
@@ -10,22 +11,22 @@ class MetaMetric extends AbstractMetric
 
     protected $results = [
         'no_tags' => [
-            'impact' => 8,
-            'message' => 'Missing page title and description meta tags. You should add the title meta tag at least'
+            self::IMPACT => 8,
+            self::MESSAGE => 'Missing page title and description meta tags. You should add the title meta tag at least'
         ],
         'title_length' => [
-            'impact' => 5,
-            'message' => 'The page title length should be between 10 and 60 characters.' .
+            self::IMPACT => 5,
+            self::MESSAGE => 'The page title length should be between 10 and 60 characters.' .
                 ' Title should also include your main keyword'
         ],
         'missing_description' => [
-            'impact' => 5,
-            'message' => 'Missing page meta description tag. We strongly recommend to add it.' .
+            self::IMPACT => 5,
+            self::MESSAGE => 'Missing page meta description tag. We strongly recommend to add it.' .
                 ' It should be between 30 and 120 characters and should include your main keyword'
         ],
         'description_length' => [
-            'impact' => 3,
-            'message' => 'The page meta description length should be between 30 and 120 characters.' .
+            self::IMPACT => 3,
+            self::MESSAGE => 'The page meta description length should be between 30 and 120 characters.' .
                 ' Description should also include your main keyword'
         ]
     ];
@@ -63,14 +64,14 @@ class MetaMetric extends AbstractMetric
 
     private function checkTitleTag($minLength = 10, $maxLength = 60)
     {
-        return isset($this->value['title'])
-            && (strlen($this->value['title']) < $minLength || strlen($this->value['title']) > $maxLength);
+        return isset($this->value[Factor::TITLE])
+            && (strlen($this->value[Factor::TITLE]) < $minLength || strlen($this->value[Factor::TITLE]) > $maxLength);
     }
 
     private function checkMetaDescriptionTag($minLength = 30, $maxLength = 120)
     {
-        return isset($this->value['meta'][self::DESCRIPTION])
-            && (strlen($this->value['meta'][self::DESCRIPTION]) < $minLength
-                || strlen($this->value['meta'][self::DESCRIPTION]) > $maxLength);
+        return isset($this->value[Factor::META][self::DESCRIPTION])
+            && (strlen($this->value[Factor::META][self::DESCRIPTION]) < $minLength
+                || strlen($this->value[Factor::META][self::DESCRIPTION]) > $maxLength);
     }
 }
