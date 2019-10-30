@@ -3,33 +3,66 @@
 namespace SeoAnalyzer\Metric\Page\Keyword;
 
 use SeoAnalyzer\Metric\AbstractMetric;
+use SeoAnalyzer\Metric\KeywordBasedMetricInterface;
 
-class HeadersMetric extends AbstractMetric
+class HeadersMetric extends AbstractMetric implements KeywordBasedMetricInterface
 {
     public $description = 'Does the headers contain a key phrase?';
+
+    protected $results = [
+        'no_keyword_h1' => [
+            'impact' => 7,
+            'message' => 'The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO'
+        ],
+        'no_keyword_h2' => [
+            'impact' => 3,
+            'message' => 'The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO'
+        ]
+    ];
+
+    public function __construct($inputData)
+    {
+        parent::__construct($inputData);
+        $this->setUpResultsConditions();
+    }
 
     /**
      * @inheritdoc
      */
     public function analyze(): string
     {
-        if (empty($this->value[self::HEADERS]['h1'][0])
-            || stripos($this->value[self::HEADERS]['h1'][0], $this->value['keyword']) === false) {
-            $this->impact = 7;
-            return 'The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO';
+        return $this->checkTheResults('Good! The site headers contain the keyword phrase');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUpResultsConditions(array $conditions = []): bool
+    {
+        $conditions = [
+            'no_keyword_h1' => $this->isKeywordMissingInHeaders(),
+            'no_keyword_h2' => $this->isKeywordMissingInHeaders('h2')
+        ];
+        return parent::setUpResultsConditions($conditions);
+    }
+
+    /**
+     * Checks if keyword is not present in headers of specified type.
+     *
+     * @param string $headerType
+     * @return bool
+     */
+    private function isKeywordMissingInHeaders(string $headerType = 'h1'): bool
+    {
+        if (empty($this->value[self::HEADERS]) || empty($this->value[self::HEADERS][$headerType])) {
+            return true;
         }
-        if (!empty($this->value[self::HEADERS]['h2'])) {
-            $anyHasKeyword = false;
-            foreach ($this->value[self::HEADERS]['h2'] as $h2) {
-                if (stripos($h2, $this->value['keyword']) !== false) {
-                    $anyHasKeyword = true;
-                }
-            }
-            if ($anyHasKeyword) {
-                return 'Good! The site headers contain the keyword phrase';
+        $keywordNotFound = true;
+        foreach ($this->value[self::HEADERS][$headerType] as $headerContent) {
+            if (stripos($headerContent, $this->value['keyword']) !== false) {
+                $keywordNotFound = false;
             }
         }
-        $this->impact = 3;
-        return 'The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO';
+        return $keywordNotFound;
     }
 }

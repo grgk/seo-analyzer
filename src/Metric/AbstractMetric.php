@@ -3,11 +3,17 @@
 namespace SeoAnalyzer\Metric;
 
 use ReflectionClass;
+use ReflectionException;
 
 abstract class AbstractMetric implements MetricInterface
 {
     const HEADERS = 'headers';
     const DESCRIPTION = 'description';
+
+    /**
+     * @var array Possible results configuration.
+     */
+    protected $results = [];
 
     /**
      * @var string Metric name
@@ -31,7 +37,7 @@ abstract class AbstractMetric implements MetricInterface
 
     /**
      * @param mixed $inputData Input data to compute metric value
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct($inputData)
     {
@@ -39,5 +45,45 @@ abstract class AbstractMetric implements MetricInterface
             $this->name = str_replace(['SeoAnalyzer\\', 'Metric', '\\'], '', (new ReflectionClass($this))->getName());
         }
         $this->value = $inputData;
+    }
+
+    /**
+     * Sets up the conditions for results configured.
+     *
+     * @param array $conditions
+     * @return bool
+     */
+    protected function setUpResultsConditions(array $conditions): bool
+    {
+        foreach ($conditions as $key => $condition) {
+            $this->results[$key]['condition'] = $condition;
+        }
+        return true;
+    }
+
+    /**
+     * Checks if any of the possible defined results occurred.
+     *
+     * @param string $defaultMessage Default message to return
+     * @return string Result message
+     */
+    protected function checkTheResults(string $defaultMessage): string
+    {
+        foreach ($this->results as $result) {
+            if ($this->isResultExpected($result['condition'])) {
+                $this->impact = $result['impact'];
+                return $result['message'];
+            }
+        }
+        return $defaultMessage;
+    }
+
+    private function isResultExpected($condition)
+    {
+        if (is_callable($condition)) {
+            return $condition($this->value);
+        } else {
+            return $condition;
+        }
     }
 }

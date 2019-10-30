@@ -2,7 +2,9 @@
 
 namespace SeoAnalyzer\Metric\Page;
 
-class KeywordDensityMetric extends AbstractKeywordDensityMetric
+use SeoAnalyzer\Metric\KeywordBasedMetricInterface;
+
+class KeywordDensityMetric extends AbstractKeywordDensityMetric implements KeywordBasedMetricInterface
 {
     public $description = 'Keyword density in page content';
 
@@ -32,18 +34,25 @@ class KeywordDensityMetric extends AbstractKeywordDensityMetric
         unset($this->value);
         $this->value['keywords'] = $keywords;
         $this->value['keyword'] = $this->keyword;
-        foreach ($keywords as $group) {
-            foreach ($group as $phrase => $count) {
-                if (stripos($phrase, $this->keyword) !== false) {
-                    if (in_array($this->keyword, $overusedWords)) {
-                        $this->impact = 4;
-                        return 'The key phrase is overused on the site. Try to reduce its occurrence';
-                    }
-                    return 'Good! The key phrase is present in most popular keywords on the site';
+        $isPresent = false;
+        foreach ($this->getPhrases() as $phrase) {
+            if (stripos($phrase, $this->keyword) !== false) {
+                if (in_array($this->keyword, $overusedWords)) {
+                    $this->impact = 4;
+                    return 'The key phrase is overused on the site. Try to reduce its occurrence';
                 }
+                $isPresent = true;
             }
         }
-        $this->impact = 4;
-        return 'You should consider adding your keyword to the site content';
+        if (!$isPresent) {
+            $this->impact = 4;
+            return 'You should consider adding your keyword to the site content';
+        }
+        return 'Good! The key phrase is present in most popular keywords on the site';
+    }
+
+    private function getPhrases()
+    {
+        return array_keys(array_merge(...$this->value['keywords']));
     }
 }

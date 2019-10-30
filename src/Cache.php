@@ -13,7 +13,7 @@ class Cache
      */
     public $adapter;
 
-    public function __construct(AbstractCache $adapterClass = null, $ttl = 300)
+    public function __construct(string $adapterClass = null, $ttl = 300)
     {
         if (empty($adapterClass)) {
             $adapterClass = FilesystemCache::class;
