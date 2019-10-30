@@ -2,6 +2,7 @@
 
 namespace SeoAnalyzer\Metric\Page;
 
+use SeoAnalyzer\Factor;
 use SeoAnalyzer\Metric\KeywordBasedMetricInterface;
 
 class KeywordDensityMetric extends AbstractKeywordDensityMetric implements KeywordBasedMetricInterface
@@ -15,7 +16,7 @@ class KeywordDensityMetric extends AbstractKeywordDensityMetric implements Keywo
     {
         $keywords = $this->analyseKeywords($this->value['text'], $this->value['stop_words']);
         unset($this->value);
-        $this->value['keywords'] = $keywords;
+        $this->value[Factor::KEYWORDS] = $keywords;
         $overusedWords = $this->getOverusedKeywords($keywords);
         if (!empty($this->keyword)) {
             return $this->analyzeWithKeyword($keywords, $overusedWords);
@@ -32,8 +33,8 @@ class KeywordDensityMetric extends AbstractKeywordDensityMetric implements Keywo
     {
         $this->name = 'KeywordDensityKeyword';
         unset($this->value);
-        $this->value['keywords'] = $keywords;
-        $this->value['keyword'] = $this->keyword;
+        $this->value[Factor::KEYWORDS] = $keywords;
+        $this->value[Factor::KEYWORD] = $this->keyword;
         $isPresent = false;
         foreach ($this->getPhrases() as $phrase) {
             if (stripos($phrase, $this->keyword) !== false) {
@@ -53,6 +54,6 @@ class KeywordDensityMetric extends AbstractKeywordDensityMetric implements Keywo
 
     private function getPhrases()
     {
-        return array_keys(array_merge(...$this->value['keywords']));
+        return array_keys(array_merge(...$this->value[Factor::KEYWORDS]));
     }
 }

@@ -42,6 +42,7 @@ class Factor
     const DENSITY_HEADERS = self::DENSITY . '.' . self::HEADERS;
 
     const KEYWORD = 'keyword';
+    const KEYWORDS = 'keywords';
     const KEYWORD_URL = self::KEYWORD . '.' . self::URL;
     const KEYWORD_PATH = self::KEYWORD . '.' . self::PATH;
     const KEYWORD_TITLE = self::KEYWORD . '.' . self::TITLE;
