@@ -21,11 +21,7 @@ class MetricFactory
         }
         $class.= 'Metric';
         if (class_exists($class)) {
-            $metric = new $class($inputData);
-            if (empty($metric->name)) {
-                throw new \InvalidArgumentException('Missing metric name for class: ' . $class);
-            }
-            return $metric;
+            return new $class($inputData);
         }
         throw new ReflectionException('Metric class ' . $class .' not exists');
     }

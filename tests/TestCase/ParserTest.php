@@ -1,6 +1,7 @@
 <?php
 namespace Tests\TestCase;
 
+use SeoAnalyzer\Parser\ExampleCustomParser;
 use SeoAnalyzer\Parser\Parser;
 use Tests\TestCase;
 
@@ -60,5 +61,14 @@ class ParserTest extends TestCase
         $this->assertNotContains('<style>', $text);
         $this->assertNotContains('<script>', $text);
         $this->assertNotContains('<h2>', $text);
+    }
+
+    public function testExampleCustomParserGetAltsPass()
+    {
+        $parser = new ExampleCustomParser(file_get_contents(dirname(__DIR__) . '/data/test.html'));
+        $this->assertContains(
+            '[{"alt":"see me testing","src":"image.jpg"},{"alt":"check it out","src":"image.jpg"},{"alt":"description',
+            json_encode($parser->getAlts())
+        );
     }
 }

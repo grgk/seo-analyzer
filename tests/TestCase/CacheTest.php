@@ -3,6 +3,7 @@ namespace Tests\TestCase;
 
 use Tests\TestCase;
 use SeoAnalyzer\Cache;
+use Symfony\Component\Cache\Exception\InvalidArgumentException;
 
 class CacheTest extends TestCase
 {
@@ -48,5 +49,12 @@ class CacheTest extends TestCase
     {
         $cache = new Cache();
         $this->assertFalse($cache->set('@', 'value'));
+    }
+
+    public function testGetFailOnInvalidArgumentExceptionFromAdapter()
+    {
+        $cache = new Cache(TestCase\Metric\Mock\TestCacheAdapter::class);
+        $cache->set('test', 'test');
+        $this->assertFalse($cache->get('test'));
     }
 }
