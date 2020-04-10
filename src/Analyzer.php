@@ -92,6 +92,21 @@ class Analyzer
     }
 
     /**
+     * Analyzes html document from string.
+     *
+     * @param string $htmlstring
+     * @param string|null $locale
+     * @return array
+     * @throws ReflectionException
+     */
+    public function analyzeHtml(string $htmlstring, string $locale = null): array
+    {
+        $this->page = new Page(null, $locale, $this->client);
+        $this->page->content = $htmlstring;
+        return $this->analyze();
+    }
+
+    /**
      * Starts analysis of a Page.
      *
      * @return array
