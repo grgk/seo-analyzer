@@ -19,11 +19,11 @@ class SizeMetric extends AbstractMetric
         ],
         'very_big' => [
             self::IMPACT => 3,
-            self::MESSAGE => 'The site is very big. You should consider rebuilding the page to optimise it\'s size'
+            self::MESSAGE => 'The site is very big. You should consider rebuilding the page to optimise its size'
         ],
         'too_big' => [
             self::IMPACT => 1,
-            self::MESSAGE => 'You should consider some optimisation of the page to decrease it\'s size'
+            self::MESSAGE => 'You should consider some optimisation of the page to decrease its size'
         ],
     ];
 
