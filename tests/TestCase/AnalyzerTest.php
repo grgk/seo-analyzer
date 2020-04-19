@@ -91,6 +91,24 @@ class AnalyzerTest extends TestCase
     }
 
     /**
+     * @throws ReflectionException
+     */
+    public function testAnalyzeHtmlPass()
+    {
+        $clientMock = $this->getClientMock();
+        $analyzer = new Analyzer(null, $clientMock);
+        $htmlString =  file_get_contents(dirname(__DIR__) . '/data/test.html');
+        $results = $analyzer->analyzeHtml($htmlString);
+        $this->assertTrue(is_array($results));
+        $this->assertEquals(count($analyzer->getMetrics()), count($results));
+        $this->assertArrayHasKey('analysis', current($results));
+        $this->assertArrayHasKey('name', current($results));
+        $this->assertArrayHasKey('description', current($results));
+        $this->assertArrayHasKey('value', current($results));
+        $this->assertArrayHasKey('negative_impact', current($results));
+    }
+
+    /**
      * @throws HttpException
      * @throws ReflectionException
      */
