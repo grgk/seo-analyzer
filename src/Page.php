@@ -81,6 +81,7 @@ class Page
     ) {
         $this->client = $client ?? new Client();
         $this->parser = $parser ?? new Parser();
+        $this->locale = $config ?? $this->locale;
         if (is_string($config)) { // Due to the backwards compatibility
             $config = [self::LOCALE => $config];
         }
