@@ -19,6 +19,7 @@ class Factor
     const SIZE = 'size';
     const RATIO = 'ratio';
     const DESCRIPTION = 'description';
+    const IMG_SIZE = 'img';
 
     const URL = 'url';
     const URL_PARSED = self::URL . '.' . self::PARSED;

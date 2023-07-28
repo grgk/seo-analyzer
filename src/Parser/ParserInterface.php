@@ -45,4 +45,10 @@ interface ParserInterface
      * @return string
      */
     public function getText(): string;
+
+    /**
+     * @param $url
+     * @return array
+     */
+    public function getImg($url): array;
 }

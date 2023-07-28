@@ -18,6 +18,7 @@ return [
         [Factor::DENSITY_PAGE => 'keywordDensity'],
         [Factor::DENSITY_HEADERS => 'headersKeywordDensity'],
         Factor::ALTS,
+        Factor::IMG_SIZE,
         Factor::URL_LENGTH,
         Factor::LOAD_TIME,
         [Factor::KEYWORD_URL => 'keyword'],
