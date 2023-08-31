@@ -76,7 +76,7 @@ class HeadersMetric extends AbstractMetric
             if (!empty($this->value['h1'])) {
                 $conditions = array_merge($conditions, [
                     'multi_H1' => count($this->value['h1']) > 1,
-                    'too_long_H1' => strlen($this->value['h1'][0]) > 35
+                    'too_long_H1' => strlen($this->value['h1'][0]) > 85
                 ]);
             }
         }

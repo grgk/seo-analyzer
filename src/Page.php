@@ -81,6 +81,7 @@ class Page
     ) {
         $this->client = $client ?? new Client();
         $this->parser = $parser ?? new Parser();
+        $this->locale = $config ?? $this->locale;
         if (is_string($config)) { // Due to the backwards compatibility
             $config = [self::LOCALE => $config];
         }
@@ -210,7 +211,8 @@ class Page
             Factor::HEADERS => $this->parser->getHeaders(),
             Factor::META_TITLE => $this->parser->getTitle(),
             Factor::TEXT => $this->parser->getText(),
-            Factor::ALTS => $this->parser->getAlts()
+            Factor::ALTS => $this->parser->getAlts(),
+            Factor::IMG_SIZE => $this->parser->getImg($this->url)
         ]);
     }
 

@@ -1,0 +1,70 @@
+yes: oui
+no: non
+Does the site use an encrypted connection?: Le site utilise-t-il une connexion HTTPS ?
+You should use encrypted connection, as this could have strong impact on SEO: Vous devez utiliser une connexion HTTPS, car cela pourrait avoir un fort impact sur le référencement
+Does the site use proper robots.txt file?: Le site utilise-t-il un fichier "robots.txt"?
+Robots.txt file blocks some parts of your site from indexing by search engines. Blocking content can have a big negative impact on SEO: Le fichier Robots.txt empêche certaines parties de votre site d'être indexées par les moteurs de recherche. Le blocage de contenu peut avoir un impact négatif important sur le référencement
+Does the site use a site map file "sitemap.xml"?: Le site utilise-t-il un fichier "sitemap.xml"?
+You should consider adding a sitemap.xml file, as this could help with indexing: Vous devriez envisager d'ajouter un fichier sitemap.xml, car cela pourrait aider à l'indexation
+Time used to load the page [sec.]: Temps utilisé pour charger la page [sec.]
+The site takes very long to load. You should definitely consider rebuilding the page and/or change the hosting provider: Cette page est très lente à charger. Vous devriez envisager de reconstruire la page et/ou de changer d'hébergeur
+You should optimise your site for faster loading, as this could have strong impact on SEO: Vous devez optimiser votre page pour un chargement plus rapide, car cela pourrait avoir un fort impact sur le référencement et l'expérience utilisateur.
+The site loads very fast: La page se charge très rapidement
+The size of the page: La taille de la page
+The site is very big. You should consider rebuilding the page to optimise its size: La page est relativement grande. A moins d'avoir une utilité spécifique, vous devriez envisager de la reformuler pour optimiser sa taille
+You should consider some optimisation of the page to decrease its size: Vous devriez envisager une optimisation de la page pour réduire sa taille
+The size of your page is ok: La taille de votre page est correcte
+The size of the page URL: La taille de l'URL de la page
+The site URL is very long. You should consider using some shorter URL: L'URL de la page est très longue. Vous devriez envisager d'utiliser une URL plus courte
+You should consider using some shorter URL: Vous devriez envisager d'utiliser une URL plus courte
+The size of URL is ok: La taille de l'URL est correcte
+The ratio of page content to page code [%]: Le ratio entre le contenu de la page et le code de la page [%]
+Content to code ratio is too low. Consider adding more text to your page or remove some unnecessary html code: Le ratio contenu/code est trop faible. Envisagez d'ajouter plus de texte à votre page ou de supprimer du code html inutile
+Consider adding more text to your page or remove unnecessary html code. Good content have crucial impact on SEO: Augmentez le nombre de mots dans votre texte ou supprimer le code html inutile. Un bon contenu et le nombre de mots peuvent avoir un impact crucial sur le référencement
+Page has good content to code ratio: La page a un bon ratio contenu / code
+Keyword density in page content: Densité des mots-clés dans le contenu de la page
+There are some overused keywords on site. You should consider limiting the use of overused phrases: Il y a des mots-clés surutilisés sur le site. Vous devriez diversifier votre vocabulaire, utiliser des synonymes ou des mots sémantiques.
+The keywords density on the site looks good: La densité des mots-clés sur le site semble bonne
+Keyword density: Densité des mots clés
+Alternate texts for images: Textes alternatifs pour les images
+There is nothing to do here as there is no images on the site.: Il n'y a rien à faire ici car il n'y a pas d'images sur cette page.
+There is a lot of images without alternate texts on your site. Every image should be described with alt attribute: Il y a beaucoup d'images sans textes alternatifs sur cette page. Chaque image doit être décrite avec l'attribut alt.
+You should optimise your site adding missing alt descriptions to images, as this could have strong impact on SEO: Vous devez optimiser votre page en ajoutant des descriptions alt manquantes aux images, cela pourrait avoir un fort impact sur le référencement dans Google images.
+Good! All images on site have alternate descriptions: Excellent! Toutes les images de cette page possèdent une description alternative.
+Keyword density in page headers: Densité des mots-clés dans les en-têtes de page
+There are some overused keywords in headers. You should consider limiting the use of those phrases: Il y a des mots clés surutilisés dans les en-têtes. Vous devriez limiter l'utilisation de ces expressions.
+The keywords density in headers looks good: La densité des mots-clés dans les en-têtes semble bonne
+Html headers metric: Métrique des en-têtes HTML
+Looks the site has no headers at all. You should rebuild your page structure as html headers have strong impact on SEO: Il semble que cette page ne possède aucune balise Hn. Vous devriez revoir la structure de cette page en y incluant des titres et sous-titres (tH1, H2, H3, H4, H5), pris en compte par google comme mots-clés forts de la page.
+There is no H1 header on the site. You should rebuild your page to use main headers as this has strong impact on SEO: Il n'y a pas d'en-tête H1 sur cette page. Vous devriez reconstruire votre page pour utiliser les titres et sous-titres (tH1, H2, H3, H4, H5), car cela a un fort impact sur le référencement
+There are multiple H1 headers on the site. You should use only one main header on the site: Il existe plusieurs en-têtes H1 sur cette page. Vous ne devez utiliser qu'un seul titre principal.
+The H1 header is too long. You should consider changing it to something shorter including your main keyword: L'en-tête H1 est trop long. Reformulez-le en une version plus courte en y intégrant votre mot-clé principal.
+There are no H2 headers on the site. You should consider rebuild your page to use proper headers structure: Il n'y a pas d'en-têtes H2 sur cette page. Ces sous-titres peuvent apporter de nouveaux mots-clés forts à la page.
+There are a lot of H2 headers on the site. You should limit number of H2 headers: Il y a beaucoup d'en-têtes H2 sur cette page. Il peut être intéressant d'exploiter d'autres balises sous-jacentes au H2, des sous sous-titres H3
+There are no H3 header on the site. Using proper headers structure can improve the SEO: Il n'y a pas d'en-tête H3 sur la page. L'utilisation d'une structure d'en-tête appropriée peut améliorer le référencement
+The headers structure on the site looks very good: La structure des en-têtes sur cette page semble très bonne
+Good! The key phrase is present in most popular keywords on the site: Super! Le mot-clé est présent dans cette page
+You should consider adding your keyword to the site content: Vous devriez ajouter votre mot-clé principal dans le contenu de cette page.
+Does the headers contain a key phrase?: Les en-têtes contiennent-ils un mot-clé ou une locution de mots ?
+The main H1 header does not contain the keyword phrase. Adding it could strongly improve SEO: L'en-tête principal H1 ne contient pas le mot-clé ou la locution de mots. L'ajouter pourrait fortement améliorer le référencement
+Good! The site headers contain the keyword phrase: Bien! Les en-têtes du site contiennent un mot-clé ou une locution de mots
+The site H2 headers does not contain the keyword phrase. Adding it could strongly improve SEO: Les en-têtes H2 du site ne contiennent pas un mot-clé ou une locution de mots. L'ajouter pourrait fortement améliorer le référencement
+Does the page contain a key phrase?: La page contient-elle un mot-clé ?
+Does it contain a key phrase?: Contient-il un mot-clé ?
+Can not find the keyword phrase. Adding it could improve SEO: Impossible de trouver le mot-clé ou la locution de mots. L'ajouter pourrait améliorer le référencement
+Good! Found the keyword phrase: Excellent! Nous avons trouvé un mot-clé ou une locution de mots
+Html meta tags information: Informations sur les balises méta HTML
+Missing page title and description meta tags. You should add the title meta tag at least: Balise Title et Meta description de la page manquantes. La balise Title indique aux moteurs le contenu de la page, la Meta Description doit inciter l'internaute à cliquer sur l'annonce.
+The page title length should be between 10 and 60 characters. Title should also include your main keyword: La longueur de la balise Title de la page doit être comprise entre 30 et 65 caractères. La balise Title doit également inclure votre mot-clé principal
+Missing page meta description tag. We strongly recommend to add it. It should be between 30 and 120 characters and should include your main keyword: Méta description de la page manquante. Nous recommandons vivement d'ajouter une phrase incitative au clic. La Meta Description doit comprendre entre 60 et 155 caractères et doit inclure votre mot-clé principal
+The page meta description length should be between 30 and 120 characters. Description should also include your main keyword: La longueur de la méta description de la page doit être comprise entre 60 et 155 caractères. La description doit également inclure votre mot-clé principal
+The site meta tags look good: Les balises méta du site sont optimisées
+The key phrase is overused on the site. Try to reduce its occurrence: Le mot-clé principal est trop utilisé sur cette page. Essayez de réduire son apparition, utilisez des synonymes, déclinaisons et autres mots sémantiques.
+Does the main URL redirects to other?: L'URL principale redirige-t-elle vers d'autres ?
+You should avoid redirects, as this could have impact on SEO: Vous devez éviter les redirections, car cela pourrait avoir un impact sur le référencement
+Looks that your site content is empty: Il semble que le contenu de cette page soit vide
+Can not read your page content: Impossible de lire le contenu de votre page
+The page load time could not be measured: Le temps de chargement de la page n'a pas pu être mesuré
+Image weight: Poids des images
+Good! You have images on your page: Bien! Votre pages contient des images
+Your image is optimized: Votre image est optimisée.

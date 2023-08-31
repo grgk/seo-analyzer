@@ -189,7 +189,7 @@ class Analyzer
      *
      * @param string $locale
      */
-    public function setUpTranslator(string $locale)
+    public function setUpTranslator(string $locale): void
     {
         $this->translator = new Translator($locale);
         $this->translator->setFallbackLocales(['en_GB']);

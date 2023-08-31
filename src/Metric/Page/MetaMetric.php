@@ -62,13 +62,19 @@ class MetaMetric extends AbstractMetric
         return parent::setUpResultsConditions($conditions);
     }
 
-    private function checkTitleTag($minLength = 10, $maxLength = 60)
+    private function checkTitleTag($minLength = 30, $maxLength = 65)
     {
         return isset($this->value[Factor::TITLE])
             && (strlen($this->value[Factor::TITLE]) < $minLength || strlen($this->value[Factor::TITLE]) > $maxLength);
     }
 
-    private function checkMetaDescriptionTag($minLength = 30, $maxLength = 120)
+    /**
+     * Taille de la meta description
+     * @param $minLength
+     * @param $maxLength
+     * @return bool
+     */
+    private function checkMetaDescriptionTag($minLength = 60, $maxLength = 155)
     {
         return isset($this->value[Factor::META][self::DESCRIPTION])
             && (strlen($this->value[Factor::META][self::DESCRIPTION]) < $minLength
