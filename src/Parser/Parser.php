@@ -125,16 +125,18 @@ class Parser extends AbstractParser
                 $attr = filter_var(trim($img->getAttribute('src')), FILTER_VALIDATE_URL);
                 $source = trim($img->getAttribute('src'));
                 //if(isset($parseUrl['scheme'])) {
-                if(!strstr($source,'data:image')) {
-                    if (($attr)) {
-                        $dataImg = $this->getRemoteFilesize($source);
-                        $src[$key]['src'] = $source;
-                    } else {
-                        $dataImg = $this->getRemoteFilesize($parseUrl['scheme'] . '://' . $parseUrl['host'] . $source);
-                        $src[$key]['src'] = $parseUrl['scheme'] . '://' . $parseUrl['host'] . $source;
+                if($source != null) {
+                    if (!strstr($source, 'data:image')) {
+                        if (($attr)) {
+                            $dataImg = $this->getRemoteFilesize($source);
+                            $src[$key]['src'] = $source;
+                        } else {
+                            $dataImg = $this->getRemoteFilesize($parseUrl['scheme'] . '://' . $parseUrl['host'] . $source);
+                            $src[$key]['src'] = $parseUrl['scheme'] . '://' . $parseUrl['host'] . $source;
+                        }
+                        $src[$key]['weight'] = $dataImg['size'];
+                        $src[$key]['status'] = $dataImg['status'];//'Your image is optimized';
                     }
-                    $src[$key]['weight'] = $dataImg['size'];
-                    $src[$key]['status'] = $dataImg['status'];//'Your image is optimized';
                 }
             }
         }
